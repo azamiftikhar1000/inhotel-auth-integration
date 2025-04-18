@@ -1,0 +1,27 @@
+{
+  "name": "authkit-static",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@chakra-ui/icons": "^2.0.17",
+    "@chakra-ui/react": "^2.5.1",
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@types/js-cookie": "^3.0.3",
+    "@types/mustache": "^4.2.2",
+    "@types/uuid": "^9.0.1",
+    "chakra-ui-markdown-renderer": "^4.1.0",
+    "framer-motion": "^10.0.1",
+    "js-cookie": "^3.0.1",
+    "localforage": "^1.10.0",
+    "mustache": "^4.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.43.5",
+    "react-icons": "^4.8.0",
+    "react-markdown": "^8.0.5",
+    "react-query": "^3.39.3",
+    "uuid": "^9.0.0",
+    "valtio": "^1.10.3"
+  }
+} 
