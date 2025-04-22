@@ -25802,17 +25802,17 @@
             localhost: "http://localhost:3005",
             development: "https://development-api.picaos.com",
             sandbox: "https://sandbox-api.picaos.com",
-            production: "http://localhost:3005",
+            production: "https://platform-backend.inhotel.io",
             default: "http://localhost:3005",
-            "": "http://localhost:3005"
+            "": "https://platform-backend.inhotel.io"
         }
           , Hu = {
             localhost: "http://localhost:3001",
             development: "https://development-api.picaos.com",
             sandbox: "https://sandbox-api.picaos.com",
-            production: "http://localhost:3001",
+            production: "https://platform-backend.inhotel.io",
             default: "http://localhost:3001",
-            "": "http://localhost:3001"
+            "": "https://platform-backend.inhotel.io"
         };
         function qu() {
             var e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : "new"

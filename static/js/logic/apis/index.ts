@@ -49,18 +49,18 @@ const domains = {
   localhost: "http://localhost:3005",
   development: "https://development-api.picaos.com",
   sandbox: "https://sandbox-api.picaos.com",
-  production: "https://platform-backend.inhotel.io/",
+  production: "https://platform-backend.inhotel.io",
   default: "https://development-api.picaos.com",
-  "": "https://development-api.picaos.com",
+  "": "https://platform-backend.inhotel.io",
 };
 
 const oldDomains = {
   localhost: "http://localhost:3001", // Same as domains for consistency
   development: "https://development-api.picaos.com",
   sandbox: "https://sandbox-api.picaos.com",
-  production: "https://platform-backend.inhotel.io/",
+  production: "https://platform-backend.inhotel.io",
   default: "https://development-api.picaos.com",
-  "": "https://development-api.picaos.com",
+  "": "https://platform-backend.inhotel.io",
 };
 
 export function getUrl(type: "old" | "new" = "new") {
