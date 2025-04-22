@@ -63,13 +63,19 @@ export const ConnectionsListSection = ({
       >
         {filteredPlatforms?.map((platform) => (
           <CardWithImageAndHeading
-            key={platform?.connectionDefinitionId}
-            _id={platform?.connectionDefinitionId}
+            key={platform?.connectionDefinitionId || ""}
+            _id={platform?.connectionDefinitionId || ""}
             onClick={(id: string) =>
-              onClick({ id, clientId: platform?.secret?.clientId, scopes: platform?.scopes, environment: platform?.environment || "test", connectionGuide: platform?.connectionGuide })
+              onClick({ 
+                id, 
+                clientId: platform?.secret?.clientId || "", 
+                scopes: platform?.scopes || "", 
+                environment: platform?.environment || "test", 
+                connectionGuide: platform?.connectionGuide || "" 
+              })
             }
-            image={platform?.image}
-            heading={platform?.title}
+            image={platform?.image || ""}
+            heading={platform?.title || ""}
           />
         ))}
       </SimpleGrid>

@@ -37,6 +37,23 @@ export interface ConnectionDefinition {
   fields?: IntegrationField[];
   icon?: string;
   status?: 'active' | 'inactive';
+  _id?: string;
+  platform?: string;
+  frontend?: {
+    spec?: {
+      image?: string;
+      title?: string;
+      category?: string;
+      helperLink?: string;
+      markdown?: string;
+    };
+    connectionForm?: {
+      formData?: any[];
+    };
+  };
+  settings?: {
+    oauth?: boolean;
+  };
 }
 
 export interface ConnectionDefinitions {
@@ -50,9 +67,16 @@ export interface SubmitConnectionProps {
   credentials: Record<string, any>;
   platformVersion?: string;
   connectionDefinitionId?: string;
+  authFormData: Record<string, unknown>;
   environment?: string;
   platform?: string;
   ownership?: string;
+  label?: string;
+  sessionId?: string;
+  setSessionId?: React.Dispatch<string>;
+  linkHeaders?: Record<string, any>;
+  linkTokenEndpoint?: string;
+  type?: string;
 }
 
 export interface IntegrationResponse {

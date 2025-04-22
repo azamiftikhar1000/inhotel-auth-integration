@@ -43,7 +43,7 @@ export const useClickCreateConnectionUx = () => {
       setLoading(true);
       let token: EmbedTokenRecord[] = await getEmbedToken(sessionId);
 
-      if (!token?.[0] || token?.[0]?.expiresAt < new Date().getTime()) {
+      if (!token?.[0] || (token?.[0]?.expiresAt && new Date().getTime() > Number(token?.[0]?.expiresAt))) {
         const newToken: EmbedTokenRecord = await createEventLinkToken({
           linkTokenEndpoint,
           linkHeaders
@@ -79,14 +79,18 @@ export const useClickCreateConnectionUx = () => {
         key: integration.key,
         environment: integration.environment,
         platform: integration.platform,
-        userId: integration.ownership.userId,
+        userId: integration.ownership?.userId || "",
         createdAt: integration.createdAt,
         updatedAt: integration.updatedAt,
-      }, integration.ownership.userId);
+      }, integration.ownership?.userId || "");
 
       setResponse(integration);
-      setSessionId(token?.[0]?.sessionId);
-      await updateEmbedToken({sessionId: token?.[0]?.sessionId});
+      if (setSessionId) {
+        setSessionId(token?.[0]?.sessionId || "");
+      }
+      if (updateEmbedToken) {
+        await updateEmbedToken({sessionId: token?.[0]?.sessionId || ""});
+      }
     } catch (error) {
       setLoading(false);
       if (axios.isAxiosError(error)) {

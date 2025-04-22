@@ -7,12 +7,21 @@ export interface Token {
 }
 
 export interface EmbedTokenRecord {
-  embedToken: string;
+  token: string;
   destination?: string;
   payload?: Record<string, any>;
   connectionId?: string;
   integrationId?: string;
   expiresAt?: string;
+  features?: Array<{
+    key: string;
+    value: string;
+  }>;
+  sessionId?: string;
+  linkSettings?: {
+    connectedPlatforms?: Array<any>;
+    eventIncToken?: string;
+  };
 }
 
 export interface TokenResponse {

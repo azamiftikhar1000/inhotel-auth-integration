@@ -71,6 +71,9 @@ export const ControlledConnectionForm = ({
     if (definition) {
 
       trigger({
+        name: `${data.name}`,
+        integrationId: definition._id || "",
+        credentials: {},
         label: `${data.name}`,
         authFormData: data,
         connectionDefinitionId: definition._id,

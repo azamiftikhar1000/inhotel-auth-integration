@@ -58,12 +58,13 @@ export const ControlledConnectionsList = ({
           linkHeaders,
         });
 
-        setConnectedPlatforms(token?.linkSettings?.connectedPlatforms);
-        setWhiteLabel?.(
-          token?.features?.find(
+        setConnectedPlatforms(token?.linkSettings?.connectedPlatforms || []);
+        if (token?.features && Array.isArray(token.features)) {
+          const whiteLabel = token.features.find(
             (feature) => feature.key === "authkit::white-label"
-          )?.value === "enabled"
-        );
+          );
+          setWhiteLabel?.(whiteLabel?.value === "enabled");
+        }
 
         if (selectedConnection) {
           const platform = token?.linkSettings?.connectedPlatforms?.find(
@@ -72,15 +73,20 @@ export const ControlledConnectionsList = ({
               platform?.connectionDefinitionId === selectedConnection
           );
 
-          setIntegrationId(
-            platform?.connectionDefinitionId || selectedConnection
-          );
+          // Create a local reference to ensure TypeScript knows this is a string
+          const defaultId = selectedConnection || "";
+          
+          if (platform?.connectionDefinitionId) {
+            setIntegrationId(platform.connectionDefinitionId);
+          } else {
+            setIntegrationId(defaultId);
+          }
 
-          setClientId(platform?.secret?.clientId as string);
-          setScopes(platform?.scopes as string);
-          setConnectionGuide?.(platform?.connectionGuide as string);
+          setClientId(platform?.secret?.clientId || "");
+          setScopes(platform?.scopes || "");
+          setConnectionGuide?.(platform?.connectionGuide || "");
         }
-        setSessionId(token?.sessionId);
+        setSessionId(token?.sessionId || "");
       } catch (error) {
         if (axios.isAxiosError(error)) {
           const description =
@@ -123,14 +129,14 @@ export const ControlledConnectionsList = ({
     connectionGuide?: string;
   }) => {
     setIntegrationId(id);
-    setEnvironment?.(environment as "test" | "live");
-    setClientId(clientId as string);
-    setScopes(scopes as string);
-    setConnectionGuide?.(connectionGuide as string);
+    setEnvironment?.(environment || "test");
+    setClientId(clientId || "");
+    setScopes(scopes || "");
+    setConnectionGuide?.(connectionGuide || "");
   };
 
   const activePlatforms = _.orderBy(
-    connectedPlatforms?.filter((platform) => platform?.active),
+    connectedPlatforms?.filter((platform) => platform?.active === true),
     ["title"],
     ["asc"]
   );

@@ -8,13 +8,15 @@ export const useGetConnectionDefinition = ({
 }: {
   definitionId: string;
 }) => {
-  const { data, isLoading } = useQuery<ConnectionDefinitions>({
-    queryKey: [remoteKeys.getConnectionDefinition, definitionId],
-    refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 60 * 24,
-    retry: false,
-    queryFn: () => getConnectionDefinition(definitionId),
-  });
+  const { data, isLoading } = useQuery(
+    [remoteKeys.getConnectionDefinition, definitionId],
+    () => getConnectionDefinition(definitionId),
+    {
+      refetchOnWindowFocus: false,
+      staleTime: 1000 * 60 * 60 * 24,
+      retry: false,
+    }
+  );
 
   return { definition: data?.rows?.[0], isLoading };
 };

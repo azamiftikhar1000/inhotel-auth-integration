@@ -12,7 +12,9 @@ export interface Connection {
   connectionDefinitionId?: string;
   environment?: string;
   platform?: string;
-  ownership?: string;
+  ownership?: {
+    userId: string;
+  };
   key?: string;
 }
 

@@ -49,7 +49,7 @@ const domains = {
   localhost: "http://localhost:3005",
   development: "https://development-api.picaos.com",
   sandbox: "https://sandbox-api.picaos.com",
-  production: "http://localhost:3005",
+  production: "https://platform-backend.inhotel.io/",
   default: "https://development-api.picaos.com",
   "": "https://development-api.picaos.com",
 };
@@ -58,7 +58,7 @@ const oldDomains = {
   localhost: "http://localhost:3001", // Same as domains for consistency
   development: "https://development-api.picaos.com",
   sandbox: "https://sandbox-api.picaos.com",
-  production: "http://localhost:3001",
+  production: "https://platform-backend.inhotel.io/",
   default: "https://development-api.picaos.com",
   "": "https://development-api.picaos.com",
 };
@@ -81,7 +81,7 @@ export function getUrl(type: "old" | "new" = "new") {
 
 export const path = getUrl();
 // export const oldPath = getUrl("old");
-export const oldPath="http://localhost:3001"
+export const oldPath="https://platform-backend.inhotel.io/"
 
 
 // Log the API paths being used

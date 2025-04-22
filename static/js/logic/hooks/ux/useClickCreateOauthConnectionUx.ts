@@ -40,54 +40,97 @@ export const useClickCreateOauthConnectionUx = () => {
     setIsLoadingToken: (loading: boolean) => void;
     environment: "test" | "live";
   }) => {
+    console.log('[OAuth Connection] Starting with params:', {
+      type,
+      clientId,
+      iosRedirectUri,
+      platformRedirectUri,
+      sandboxPlatformRedirectUri,
+      scopes,
+      sessionId,
+      linkTokenEndpoint,
+      environment,
+      formDataKeys: Object.keys(formData || {})
+    });
+    
     try {
       setIsLoadingToken(true);
       let token: EmbedTokenRecord[] = await getEmbedToken(sessionId);
+      console.log('[OAuth Connection] Retrieved embed token:', token);
 
-      if (!token?.[0] || token?.[0]?.expiresAt < new Date().getTime()) {
+      if (!token?.[0] || (token[0].expiresAt && Number(token[0].expiresAt) < new Date().getTime())) {
+        console.log('[OAuth Connection] Token expired or not found, creating new token');
         const newToken: EmbedTokenRecord = await createEventLinkToken({
           linkTokenEndpoint,
           linkHeaders,
         });
+        console.log('[OAuth Connection] Created new token:', newToken);
 
         token = [newToken];
-        setSessionId(newToken?.sessionId);
+        if (newToken && 'sessionId' in newToken) {
+          setSessionId(newToken.sessionId as string);
+        } else {
+          console.error('[OAuth Connection] Missing sessionId in newToken:', newToken);
+        }
       }
       setIsLoadingToken(false);
       setLoading(true);
 
       if (formData) {
-        await updateEmbedToken({ sessionId: token?.[0]?.sessionId, formData });
+        console.log('[OAuth Connection] Updating embed token with form data');
+        await updateEmbedToken({ 
+          sessionId: token[0] && 'sessionId' in token[0] ? token[0].sessionId as string : sessionId, 
+          formData 
+        });
       }
 
+      let effectivePlatformRedirectUri = platformRedirectUri;
       if (platformRedirectUri.includes("{{")) {
-        platformRedirectUri = Mustache.render(platformRedirectUri, formData);
+        console.log('[OAuth Connection] Rendering platformRedirectUri template');
+        effectivePlatformRedirectUri = Mustache.render(platformRedirectUri, formData);
+        console.log('[OAuth Connection] Rendered platformRedirectUri:', effectivePlatformRedirectUri);
       }
 
+      let effectiveSandboxRedirectUri = sandboxPlatformRedirectUri;
       if (sandboxPlatformRedirectUri?.includes("{{")) {
-        sandboxPlatformRedirectUri = Mustache.render(
+        console.log('[OAuth Connection] Rendering sandboxPlatformRedirectUri template');
+        effectiveSandboxRedirectUri = Mustache.render(
           sandboxPlatformRedirectUri,
           formData
         );
+        console.log('[OAuth Connection] Rendered sandboxPlatformRedirectUri:', effectiveSandboxRedirectUri);
       }
 
-      let redirectUri = platformRedirectUri;
+      let redirectUri = effectivePlatformRedirectUri;
       if (
-        sandboxPlatformRedirectUri &&
-        sandboxPlatformRedirectUri !== "" &&
+        effectiveSandboxRedirectUri &&
+        effectiveSandboxRedirectUri !== "" &&
         environment === "test"
       ) {
-        redirectUri = sandboxPlatformRedirectUri;
+        console.log('[OAuth Connection] Using sandbox redirect URI for test environment');
+        redirectUri = effectiveSandboxRedirectUri;
       }
 
+      const finalSessionId = token[0] && 'sessionId' in token[0] ? token[0].sessionId as string : sessionId;
+      const openUrl = `${redirectUri}&client_id=${clientId}&redirect_uri=${iosRedirectUri}&scope=${scopes}&state=${type}::${finalSessionId}`;
+      
+      console.log('[OAuth Connection] Opening OAuth window with URL:', openUrl);
       window.open(
-        `${redirectUri}&client_id=${clientId}&redirect_uri=${iosRedirectUri}&scope=${scopes}&state=${type}::${token?.[0]?.sessionId}`,
+        openUrl,
         "connect",
         "width=500,height=800"
       );
+      // const popup = window.open(openUrl);
+      // window.location.href = openUrl;
     } catch (error) {
       setIsLoadingToken(false);
-      console.error(error);
+      console.error('[OAuth Connection] Error in OAuth connection process:', error);
+      if (error instanceof Error) {
+        console.error('[OAuth Connection] Error details:', {
+          message: error.message,
+          stack: error.stack
+        });
+      }
     }
   };
 

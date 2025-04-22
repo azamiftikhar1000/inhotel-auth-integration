@@ -4,12 +4,14 @@ import { remoteKeys } from '../apis';
 import { getConnectionOauthDefinitionApi } from '../apis/oauth';
 
 export default function useGetConnectionOauthDefinition(type: string) {
-  const connectionOauthDefinitions = useQuery<ConnectionOauthDefinitions>({
-    queryKey: [remoteKeys.getConnectionOauthDefinition, type],
-    queryFn: () => getConnectionOauthDefinitionApi(),
-    enabled: !!type,
-    staleTime: 5 * 60 * 1000,
-  });
+  const connectionOauthDefinitions = useQuery(
+    [remoteKeys.getConnectionOauthDefinition, type],
+    () => getConnectionOauthDefinitionApi(),
+    {
+      enabled: !!type,
+      staleTime: 5 * 60 * 1000,
+    }
+  );
 
   //TODO: Filter the connectionOauthDefinitions by type
   const data = connectionOauthDefinitions?.data?.rows?.filter((definition) => definition?.connectionPlatform === type)?.[0];

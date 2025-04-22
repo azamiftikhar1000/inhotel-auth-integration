@@ -6,7 +6,7 @@ export const createLinkToken = ({
   group,
   connectionType,
   type,
-  linkTokenEndpoint,
+  linkTokenEndpoint = "",
   linkHeaders,
 }: LinkTokenProps) =>
   apiRequest({

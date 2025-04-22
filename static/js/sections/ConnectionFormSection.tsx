@@ -66,7 +66,7 @@ export const ConnectionFormSection = ({
   const formData = showNameInput
     ? [
         {
-          name: "NAME",
+          name: "name",
           type: "input",
           label: "Name",
           placeholder: "My Connection",
@@ -74,9 +74,9 @@ export const ConnectionFormSection = ({
             required: "This field is required",
           },
         },
-        ...definition?.frontend?.connectionForm?.formData,
+        ...(definition?.frontend?.connectionForm?.formData || []),
       ]
-    : definition?.frontend?.connectionForm?.formData;
+    : (definition?.frontend?.connectionForm?.formData || []);
 
   return (
     <VStack

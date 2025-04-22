@@ -16,7 +16,7 @@ export const useCreateConnection = () => {
         authFormData,
         connectionDefinitionId,
         type,
-        linkHeaders,
+        linkHeaders
       })
   );
 

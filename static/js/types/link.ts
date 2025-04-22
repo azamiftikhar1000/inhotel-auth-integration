@@ -15,22 +15,41 @@ export interface ConnectionPlatform {
   feature?: string;
   icon?: string;
   description?: string;
+  key?: string;
+  value?: string;
+  title?: string;
+  image?: string;
+  connectionDefinitionId?: string;
+  secret?: {
+    clientId?: string;
+  };
+  scopes?: string;
+  environment?: "test" | "live";
+  connectionGuide?: string;
+  active?: boolean;
 }
 
 export interface CreateConnectionProps {
-  name: string;
+  id?: string;
+  name?: string;
   description?: string;
-  integrationId: string;
-  credentials: Record<string, any>;
+  active?: boolean;
+  integrationId?: string;
+  credentials?: Record<string, any>;
   platformVersion?: string;
-  connectionDefinitionId?: string;
+  title?: string;
+  connectionDefinitionId: string;
+  secret?: string;
+  scopes?: string[];
   environment?: string;
   platform?: string;
   ownership?: string;
-  linkToken?: string;
+  linkToken: string;
   authFormData?: { [K: string]: unknown };
   type?: string;
   linkHeaders?: Record<string, unknown>;
+  connectionGuide?: string;
+  image?: string;
 }
 
 export interface CreateIntegrationProps {
@@ -44,13 +63,23 @@ export interface CreateIntegrationProps {
 }
 
 export interface EventLinkTokenProps {
-  integrationId: string;
+  integrationId?: string;
   connectionId?: string;
   redirectUri?: string;
   tokenExpiryMs?: number;
+  linkTokenEndpoint: string;
+  linkHeaders?: Record<string, unknown>;
 }
 
 export interface LinkTokenProps {
+  connectionDefinitionId: string;
+  authFormData?: Record<string, unknown>;
+  label?: string;
+  group?: string;
+  connectionType?: string;
+  type?: string;
+  linkTokenEndpoint?: string;
+  linkHeaders?: Record<string, unknown>;
   integrationId: string;
   connectionId?: string;
   redirectUri?: string;
