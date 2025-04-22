@@ -52,13 +52,13 @@ module.exports = {
     open: true,
     proxy: {
       '/v1/public': {
-        target: 'http://localhost:3005',
+        target: 'https://platform-backend.inhotel.io',
         secure: false,
         changeOrigin: true,
         logLevel: 'debug',
       },
       '/public/v1': {
-        target: 'http://localhost:3001',
+        target: 'https://platform-backend.inhotel.io',
         secure: false,
         changeOrigin: true,
         logLevel: 'debug',

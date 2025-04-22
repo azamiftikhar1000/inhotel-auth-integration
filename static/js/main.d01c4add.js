@@ -25799,7 +25799,7 @@
             }
         }()
           , Wu = {
-            localhost: "http://localhost:3005",
+            localhost: "https://platform-backend.inhotel.io",//"http://localhost:3005",
             development: "https://development-api.picaos.com",
             sandbox: "https://sandbox-api.picaos.com",
             production: "https://platform-backend.inhotel.io",
@@ -25807,7 +25807,7 @@
             "": "https://platform-backend.inhotel.io"
         }
           , Hu = {
-            localhost: "http://localhost:3001",
+            localhost: "https://platform-backend.inhotel.io",//"http://localhost:3001",
             development: "https://development-api.picaos.com",
             sandbox: "https://sandbox-api.picaos.com",
             production: "https://platform-backend.inhotel.io",
