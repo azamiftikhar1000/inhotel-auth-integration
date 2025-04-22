@@ -4,9 +4,12 @@
   "description": "AuthKit for PicaOS",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=development webpack serve --config webpack.config.js --mode development",
-    "build": "NODE_ENV=production webpack --config webpack.config.js --mode production"
+    "build": "webpack --config webpack.config.js --mode production",
+    "heroku-postbuild": "npm run build",
+    "start": "node server.js",
+    "dev": "NODE_ENV=development webpack serve --config webpack.config.js --mode development"
   },
+  
   "dependencies": {
     "@chakra-ui/checkbox": "^2.3.2",
     "@chakra-ui/icons": "^2.2.4",
