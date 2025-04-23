@@ -110,11 +110,18 @@ export const useClickCreateOauthConnectionUx = () => {
         console.log('[OAuth Connection] Using sandbox redirect URI for test environment');
         redirectUri = effectiveSandboxRedirectUri;
       }
+      console.log('[OAuth Connection] Redirect URI:', redirectUri);
 
       const finalSessionId = token[0] && 'sessionId' in token[0] ? token[0].sessionId as string : sessionId;
-      const openUrl = `${redirectUri}&client_id=${clientId}&redirect_uri=${iosRedirectUri}&scope=${scopes}&state=${type}::${finalSessionId}`;
-      
-      console.log('[OAuth Connection] Opening OAuth window with URL:', openUrl);
+      console.log("Client ID: ", clientId)
+      // const openUrl = `${redirectUri}&scope=${scopes}&client_id=${clientId}&redirect_uri=${iosRedirectUri}&state=${type}::${finalSessionId}`;
+      const openUrl = `${redirectUri}` +
+                      `&scope=${encodeURIComponent(scopes)}` +
+                      `&client_id=${encodeURIComponent(clientId)}` +
+                      `&redirect_uri=${encodeURIComponent(iosRedirectUri)}` +
+                      `&state=${encodeURIComponent(`${type}::${finalSessionId}`)}`;
+
+      console.info('[OAuth Connection] Opening OAuth window with URL:', openUrl);
       window.open(
         openUrl,
         "connect",

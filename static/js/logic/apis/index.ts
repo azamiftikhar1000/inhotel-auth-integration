@@ -81,7 +81,7 @@ export function getUrl(type: "old" | "new" = "new") {
 
 export const path = getUrl();
 // export const oldPath = getUrl("old");
-export const oldPath="https://platform-backend.inhotel.io/"
+export const oldPath="https://platform-backend.inhotel.io"
 
 
 // Log the API paths being used
