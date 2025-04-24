@@ -26,6 +26,7 @@
     "chakra-ui-markdown-renderer": "^4.1.0",
     "express": "^4.21.2",
     "framer-motion": "^10.0.1",
+    "http-proxy-middleware": "^3.0.5",
     "js-cookie": "^3.0.1",
     "localforage": "^1.10.0",
     "mustache": "^4.2.0",
