@@ -47,19 +47,19 @@ export const apiRequest = async ({
 // Update domain to use http instead of https for localhost
 const domains = {
   localhost: "https://platform-backend.inhotel.io",//"http://localhost:3005",
-  development: "https://development-api.picaos.com",
+  development: "https://platform-backend.inhotel.io",
   sandbox: "https://sandbox-api.picaos.com",
   production: "https://platform-backend.inhotel.io",
-  default: "https://development-api.picaos.com",
+  default: "https://platform-backend.inhotel.io",
   "": "https://platform-backend.inhotel.io",
 };
 
 const oldDomains = {
   localhost: "https://platform-backend.inhotel.io",//"http://localhost:3001", // Same as domains for consistency
-  development: "https://development-api.picaos.com",
+  development: "https://platform-backend.inhotel.io",
   sandbox: "https://sandbox-api.picaos.com",
   production: "https://platform-backend.inhotel.io",
-  default: "https://development-api.picaos.com",
+  default: "https://platform-backend.inhotel.io",
   "": "https://platform-backend.inhotel.io",
 };
 
