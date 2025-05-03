@@ -122,7 +122,7 @@ export const useClickCreateOauthConnectionUx = () => {
                       `&scope=${encodeURIComponent(scopes)}` +
                       `&client_id=${encodeURIComponent(clientId)}` +
                       `&redirect_uri=${encodeURIComponent(iosRedirectUri)}` +
-                      `&state=${encodeURIComponent(`${type}::${finalSessionId}`)}`;
+                      `&state=${encodeURIComponent(`${type}::${finalSessionId}#${linkHeaders?.["X-Pica-Secret"]}`)}`;
 
       console.info('[OAuth Connection] Opening OAuth window with URL:', openUrl);
       window.open(
