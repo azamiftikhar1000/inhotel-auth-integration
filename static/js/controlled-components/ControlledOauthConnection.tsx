@@ -109,7 +109,12 @@ export const ControlledOauthConnection = ({
       try {
         const result: AxiosResponse = await axios.post(
           apiKeys["get.embed.token"],
-          { sessionId: id }
+          { sessionId: id },
+          {
+            headers: {
+              'x-pica-secret': linkHeaders?.['X-Pica-Secret'] as string
+            }
+          }
         );
         const responseData = result?.data?.[0]?.response;
 

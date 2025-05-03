@@ -9,11 +9,13 @@ export const apiRequest = async ({
   method,
   payload,
   headers,
+  messageData,
 }: {
   url: string;
   method: "POST" | "GET";
   payload: object;
   headers?: object;
+  messageData?: { linkHeaders?: { 'X-Pica-Secret'?: string } };
 }) => {
   try {
     console.log(`Making ${method} request to: ${url}`);
@@ -22,11 +24,11 @@ export const apiRequest = async ({
       method,
       data: payload,
       headers: {
-        ...headers,
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'x-pica-secret': API_SECRET,
+        'x-pica-secret': headers?.['x-pica-secret'] || messageData?.linkHeaders?.['X-Pica-Secret'] || API_SECRET,
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36',
+        ...headers,
       },
       withCredentials: false, // Disable sending cookies to avoid CORS preflight
       timeout: 10000, // 10 second timeout

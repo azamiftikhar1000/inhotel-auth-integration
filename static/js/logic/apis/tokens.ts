@@ -1,9 +1,10 @@
 import { apiKeys, apiRequest } from ".";
 
-export const getEmbedTokenApi = (sessionId: string) => apiRequest({
+export const getEmbedTokenApi = (sessionId: string, messageData?: { linkHeaders?: { 'X-Pica-Secret'?: string } }) => apiRequest({
     method: "POST",
     url: apiKeys["get.embed.token"],
-    payload: { sessionId }
+    payload: { sessionId },
+    messageData
 })
 
 export const updateEmbedTokenApi = (payload: {

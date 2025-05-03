@@ -55,7 +55,10 @@ export const useClickCreateOauthConnectionUx = () => {
     
     try {
       setIsLoadingToken(true);
-      let token: EmbedTokenRecord[] = await getEmbedToken(sessionId);
+      let token: EmbedTokenRecord[] = await getEmbedToken({ 
+        sessionId,
+        messageData: { linkHeaders }
+      });
       console.log('[OAuth Connection] Retrieved embed token:', token);
 
       if (!token?.[0] || (token[0].expiresAt && Number(token[0].expiresAt) < new Date().getTime())) {

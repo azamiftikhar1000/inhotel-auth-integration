@@ -41,7 +41,10 @@ export const useClickCreateConnectionUx = () => {
     try {
 
       setLoading(true);
-      let token: EmbedTokenRecord[] = await getEmbedToken(sessionId);
+      let token: EmbedTokenRecord[] = await getEmbedToken({ 
+        sessionId,
+        messageData: { linkHeaders }
+      });
 
       if (!token?.[0] || (token?.[0]?.expiresAt && new Date().getTime() > Number(token?.[0]?.expiresAt))) {
         const newToken: EmbedTokenRecord = await createEventLinkToken({
