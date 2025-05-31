@@ -58,6 +58,7 @@ export const ControlledConnectionForm = ({
   };
 
   const handleClose = async () => {
+    setIntegrationId(undefined);
     await updateEmbedToken({sessionId: id});
     window?.parent?.postMessage(
       {

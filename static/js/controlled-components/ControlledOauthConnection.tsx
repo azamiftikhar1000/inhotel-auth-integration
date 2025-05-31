@@ -59,6 +59,8 @@ export const ControlledOauthConnection = ({
   };
 
   const handleClose = async () => {
+    setIntegrationId(undefined);
+    setClientId(undefined);
     await updateEmbedToken({ sessionId: id });
     window?.parent?.postMessage(
       {
