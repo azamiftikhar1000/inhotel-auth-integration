@@ -37,6 +37,8 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
   const [actionsLoading, setActionsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [fetched, setFetched] = useState(false);
+  const [assistantId, setAssistantId] = useState<string | null>(null);
+  const [assistantLookupComplete, setAssistantLookupComplete] = useState(false);
 
   const [colorMode] = useGlobal(['colormode', 'selected']);
 
@@ -44,10 +46,70 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
   const API_URL = 'https://backend.inhotel.io/tool/nondefault';
   const KNOWLEDGE_API_URL = 'https://platform-backend.inhotel.io/v1/knowledge';
 
+  // Extract assistant_id from linkHeaders on mount
+  useEffect(() => {
+    const extractAssistantId = async () => {
+      try {
+        if (!linkHeaders?.['X-Pica-Secret']) {
+          console.log('No X-Pica-Secret found in linkHeaders');
+          setAssistantLookupComplete(true);
+          return;
+        }
+
+        const secret = linkHeaders['X-Pica-Secret'] as string;
+        console.log(`Processing secret: ${secret.substring(0, 20)}...`);
+
+        // Call our assistant lookup API that queries MongoDB
+        const response = await fetch('/api/assistant/lookup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            secret: secret,
+            options: {
+              retryAlternative: true,
+              includeMetadata: false,
+              skipToolsFetch: true
+            }
+          }),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.assistant_id) {
+            setAssistantId(result.assistant_id);
+            console.log(`Assistant ID found: ${result.assistant_id}`);
+          } else {
+            console.log('No assistant_id found in response:', result);
+          }
+        } else {
+          console.warn('Failed to lookup assistant:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error extracting assistant_id:', error);
+      } finally {
+        setAssistantLookupComplete(true);
+      }
+    };
+
+    if (isOpen && linkHeaders) {
+      setAssistantLookupComplete(false);
+      extractAssistantId();
+    }
+  }, [isOpen, linkHeaders]);
+
   // Fetch tools from API
   const fetchTools = async (): Promise<Tool[]> => {
     try {
-      const res = await fetch(API_URL, { cache: 'no-store' });
+      // Build URL with inbox_id parameter if we have assistant_id
+      let url = API_URL;
+      if (assistantId) {
+        url += `?inbox_id=${encodeURIComponent(assistantId)}`;
+        console.log(`Fetching tools with assistant_id: ${assistantId}`);
+      }
+
+      const res = await fetch(url, { cache: 'no-store' });
       const json: APIResponse<any[]> = await res.json();
       
       if (json.status_code === 0 && Array.isArray(json.data)) {
@@ -164,10 +226,10 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
     setFilteredTools(filtered);
   };
 
-  // Load tools on mount
+  // Load tools only after assistant lookup is complete
   useEffect(() => {
     const loadTools = async () => {
-      if (!fetched) {
+      if (!fetched && assistantLookupComplete) {
         setFetched(true);
         try {
           const tools = await fetchTools();
@@ -180,7 +242,14 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
     };
 
     loadTools();
-  }, [fetched]);
+  }, [fetched, assistantLookupComplete]);
+
+  // Reset fetched state when assistantId changes
+  useEffect(() => {
+    if (assistantLookupComplete) {
+      setFetched(false);
+    }
+  }, [assistantId, assistantLookupComplete]);
 
   // Handle search
   useEffect(() => {
