@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -17,24 +17,10 @@ import {
   Heading,
   Link,
   useColorMode,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
 } from '@chakra-ui/react';
 import { Tool, ToolAction, APIResponse, KnowledgeAPIResponse, ToolCatalogModalProps } from '../types/toolCatalog';
 import { ConnectionPlatform } from '../types/link';
 import useGlobal from '../logic/hooks/useGlobal';
-
-// Declare agGrid globally
-declare global {
-  interface Window {
-    agGrid: any;
-  }
-}
 
 export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
   isOpen,
@@ -51,51 +37,12 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
   const [actionsLoading, setActionsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [fetched, setFetched] = useState(false);
-  const [agGridLoaded, setAgGridLoaded] = useState(false);
-  const gridApiRef = useRef<any>(null);
-  const gridContainerRef = useRef<HTMLDivElement>(null);
 
   const [colorMode] = useGlobal(['colormode', 'selected']);
 
   // API URLs
   const API_URL = 'https://backend.inhotel.io/tool/nondefault';
   const KNOWLEDGE_API_URL = 'https://platform-backend.inhotel.io/v1/knowledge';
-
-  // Load AG Grid from CDN
-  useEffect(() => {
-    const loadAgGrid = () => {
-      if (window.agGrid) {
-        setAgGridLoaded(true);
-        return;
-      }
-
-      // Check if already loading
-      if (document.querySelector('script[src*="ag-grid"]')) {
-        return;
-      }
-
-      // Load CSS
-      const cssLink = document.createElement('link');
-      cssLink.rel = 'stylesheet';
-      cssLink.href = 'https://cdn.jsdelivr.net/npm/ag-grid-community@31.0.3/styles/ag-grid.css';
-      document.head.appendChild(cssLink);
-
-      const cssTheme = document.createElement('link');
-      cssTheme.rel = 'stylesheet';
-      cssTheme.href = 'https://cdn.jsdelivr.net/npm/ag-grid-community@31.0.3/styles/ag-theme-quartz.css';
-      document.head.appendChild(cssTheme);
-
-      // Load JS
-      const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/ag-grid-community@31.0.3/dist/ag-grid-community.min.js';
-      script.onload = () => {
-        setAgGridLoaded(true);
-      };
-      document.head.appendChild(script);
-    };
-
-    loadAgGrid();
-  }, []);
 
   // Fetch tools from API
   const fetchTools = async (): Promise<Tool[]> => {
@@ -156,102 +103,6 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
     }
   };
 
-  // Initialize AG Grid
-  const initializeGrid = (container: HTMLElement) => {
-    if (!window.agGrid) return;
-    
-    if (gridApiRef.current) {
-      gridApiRef.current.destroy();
-      gridApiRef.current = null;
-    }
-
-    const columnDefs = [
-      {
-        headerName: 'TITLE',
-        field: 'title',
-        flex: 3,
-        minWidth: 200,
-        cellStyle: {
-          fontWeight: '500',
-          whiteSpace: 'normal',
-          wordWrap: 'break-word',
-          overflowWrap: 'break-word',
-          wordBreak: 'normal',
-          lineHeight: '1.3',
-          padding: '8px',
-          display: 'flex',
-          alignItems: 'flex-start'
-        },
-        autoHeight: true
-      },
-      {
-        headerName: 'TAGS',
-        field: 'tags',
-        flex: 2,
-        minWidth: 150,
-        cellRenderer: function(params: any) {
-          const tags = params.value;
-          if (!tags || !Array.isArray(tags) || tags.length === 0) {
-            return '<div class="tags-cell"><span class="no-tags">No tags</span></div>';
-          }
-          
-          const tagElements = tags.map((tag: string) => 
-            `<span class="tag-badge">${tag}</span>`
-          ).join('');
-          
-          return `<div class="tags-cell">${tagElements}</div>`;
-        },
-        cellStyle: {
-          padding: '8px',
-          whiteSpace: 'normal',
-          wordWrap: 'break-word',
-          overflowWrap: 'break-word',
-          wordBreak: 'normal',
-          display: 'flex',
-          alignItems: 'flex-start'
-        },
-        autoHeight: true
-      }
-    ];
-
-    const gridOptions = {
-      columnDefs: columnDefs,
-      rowData: selectedToolActions,
-      defaultColDef: {
-        sortable: true,
-        filter: true,
-        resizable: true,
-        wrapText: true
-      },
-      pagination: true,
-      paginationPageSize: 10,
-      domLayout: 'normal',
-      rowHeight: null,
-      getRowHeight: function() {
-        return 'auto';
-      },
-      headerHeight: 45,
-      animateRows: true,
-      rowSelection: 'single',
-      suppressHorizontalScroll: false,
-      suppressColumnVirtualisation: true
-    };
-
-    try {
-      gridApiRef.current = window.agGrid.createGrid(container, gridOptions);
-    } catch (error) {
-      console.warn('Failed to create AG Grid:', error);
-    }
-  };
-
-  // Update grid data
-  const updateGridData = (actions: ToolAction[]) => {
-    if (gridApiRef.current) {
-      gridApiRef.current.setGridOption('rowData', actions);
-      gridApiRef.current.sizeColumnsToFit();
-    }
-  };
-
   // Handle tool selection
   const handleToolSelect = async (tool: Tool) => {
     setSelectedTool(tool);
@@ -261,15 +112,6 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
     try {
       const actions = await fetchToolActions(tool.name);
       setSelectedToolActions(actions);
-      
-      // Initialize AG Grid after actions are loaded and component updates
-      if (agGridLoaded && gridContainerRef.current && actions.length > 0) {
-        setTimeout(() => {
-          if (gridContainerRef.current) {
-            initializeGrid(gridContainerRef.current);
-          }
-        }, 100);
-      }
     } catch (error) {
       console.error('Error fetching actions:', error);
       setSelectedToolActions([]);
@@ -277,17 +119,6 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
       setActionsLoading(false);
     }
   };
-
-  // Update grid when AG Grid loads and we have actions
-  useEffect(() => {
-    if (agGridLoaded && gridContainerRef.current && selectedToolActions.length > 0 && selectedTool) {
-      setTimeout(() => {
-        if (gridContainerRef.current) {
-          initializeGrid(gridContainerRef.current);
-        }
-      }, 100);
-    }
-  }, [agGridLoaded, selectedToolActions, selectedTool]);
 
   // Handle tool connection
   const handleToolConnect = (tool: Tool) => {
@@ -297,7 +128,6 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
 
     if (!platform || !platform.connectionDefinitionId) {
       console.warn(`No matching platform found for tool: ${tool.name}`);
-      // You could show a toast notification here if needed
       return;
     }
 
@@ -357,166 +187,41 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
     filterTools(searchQuery);
   }, [searchQuery, allTools]);
 
-  // Render actions table (fallback if AG Grid not available)
-  const renderActionsTable = () => {
-    if (agGridLoaded && selectedToolActions.length > 0) {
+  // Render actions list
+  const renderActionsList = () => {
+    if (actionsLoading) {
       return (
-        <Box 
-          ref={gridContainerRef}
-          className="ag-theme-quartz" 
-          w="100%"
-          h="300px"
-          minH="200px"
-          overflow="hidden"
-        />
+        <Text fontSize="1rem" color={colorMode === 'light' ? '#a8a29e' : '#6b7280'} fontStyle="italic" m="0" lineHeight="1.2">
+          Loading actions...
+        </Text>
       );
     }
 
-    // Fallback table
+    if (selectedToolActions.length === 0) {
+      return (
+        <Text fontSize="1rem" color={colorMode === 'light' ? '#a8a29e' : '#6b7280'} fontStyle="italic" m="0" lineHeight="1.2">
+          No actions available
+        </Text>
+      );
+    }
+
     return (
-      <TableContainer w="100%" h="300px" overflowY="auto">
-        <Table variant="simple" size="sm">
-          <Thead>
-            <Tr>
-              <Th>TITLE</Th>
-              <Th>TAGS</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {selectedToolActions.map((action, index) => (
-              <Tr key={index}>
-                <Td fontWeight="500">{action.title}</Td>
-                <Td>
-                  {action.tags && action.tags.length > 0 ? (
-                    <Box display="flex" flexWrap="wrap" gap="0.25rem">
-                      {action.tags.map((tag, tagIndex) => (
-                        <Box
-                          key={tagIndex}
-                          bg="#ecfdf5"
-                          color="#047857"
-                          px="0.4rem"
-                          py="0.15rem"
-                          borderRadius="0.2rem"
-                          fontSize="0.75rem"
-                          border="1px solid #bbf7d0"
-                        >
-                          {tag}
-                        </Box>
-                      ))}
-                    </Box>
-                  ) : (
-                    <Text color="gray.400" fontStyle="italic" fontSize="0.85rem">
-                      No tags
-                    </Text>
-                  )}
-                </Td>
-              </Tr>
-            ))}
-            {selectedToolActions.length === 0 && !actionsLoading && (
-              <Tr>
-                <Td colSpan={2} textAlign="center" color="gray.500">
-                  No actions available
-                </Td>
-              </Tr>
-            )}
-          </Tbody>
-        </Table>
-      </TableContainer>
+      <Box>
+        {selectedToolActions.map((action, index) => (
+          <Box
+            key={index}
+            fontSize="1rem"
+            color={colorMode === 'light' ? '#262626' : '#d1d5db'}
+            lineHeight="1.2"
+            dangerouslySetInnerHTML={{ __html: action.title }}
+          />
+        ))}
+      </Box>
     );
   };
 
   return (
     <>
-      <style>
-        {`
-          /* AG Grid customization */
-          .ag-theme-quartz {
-            font-family: 'Exo', sans-serif;
-            --ag-background-color: var(--neutral--000);
-            --ag-foreground-color: var(--sand-900);
-            --ag-active-color: var(--green-200);
-            --ag-font-size: 0.9rem;
-            --ag-line-height: 1.2;
-            --ag-border-radius: 0.5rem;
-            --ag-border-color: var(--sand-100);
-            --ag-wrapper-border-radius: 0.5rem;
-            --ag-grid-size: 6px;
-            --ag-checkbox-checked-color: var(--neutral--500);
-            --ag-checkbox-unchecked-color: var(--neutral--500);
-            --ag-input-focus-box-shadow: none;
-          }
-
-          .ag-theme-quartz .ag-header,
-          .ag-theme-quartz .ag-header-cell {
-            background-color: var(--sand-100);
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--sand-900);
-          }
-
-          .ag-header-cell-sortable .ag-header-cell-label {
-            font-weight: 600;
-          }
-
-          .ag-theme-quartz .ag-cell {
-            border-right: 1px solid var(--sand-100);
-            padding: 8px;
-          }
-
-          .ag-theme-quartz .ag-row-hover {
-            background-color: var(--green-200);
-          }
-
-          .ag-theme-quartz .ag-row {
-            border-bottom: 1px solid var(--sand-100);
-          }
-
-          .tags-cell {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.25rem;
-            align-items: flex-start;
-            padding: 0.25rem 0;
-            width: 100%;
-            box-sizing: border-box;
-          }
-
-          .tag-badge {
-            background: var(--green-050);
-            color: var(--green-700);
-            padding: 0.15rem 0.4rem;
-            border-radius: 0.2rem;
-            font-size: 0.75rem;
-            border: 1px solid var(--green-200);
-            white-space: nowrap;
-            flex-shrink: 0;
-          }
-
-          .no-tags {
-            color: var(--sand-400);
-            font-style: italic;
-            font-size: 0.8rem;
-          }
-
-          :root {
-            --sand-060: #f8f6f3;
-            --green-300: #10b981;
-            --green-050: #ecfdf5;
-            --green-200: #bbf7d0;
-            --green-700: #047857;
-            --sand-200: #e7e5e4;
-            --sand-400: #a8a29e;
-            --sand-100: #f5f5f4;
-            --sand-040: #faf9f7;
-            --sand-900: #1c1917;
-            --neutral--000: #ffffff;
-            --neutral--950: #0a0a0a;
-            --neutral--900: #171717;
-            --neutral--800: #262626;
-          }
-        `}
-      </style>
-
       <Modal isOpen={isOpen} onClose={onClose} size="6xl" closeOnOverlayClick={false}>
         <ModalOverlay bg="rgba(0,0,0,0.4)" />
         <ModalContent
@@ -734,14 +439,14 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
 
                         {/* Details grid */}
                         <Grid templateColumns="max-content 1fr" rowGap="0.5rem" columnGap="1rem" mt="1rem">
-                          <Text fontSize="0.9rem" color={colorMode === 'light' ? '#a8a29e' : '#6b7280'} fontWeight="300">
+                          <Text fontSize="0.9rem" color={colorMode === 'light' ? '#57534e' : '#6b7280'} fontWeight="300">
                             Provider
                           </Text>
                           <Text fontSize="1rem" color={colorMode === 'light' ? '#262626' : '#d1d5db'} m="0">
                             {selectedTool.provider}
                           </Text>
 
-                          <Text fontSize="0.9rem" color={colorMode === 'light' ? '#a8a29e' : '#6b7280'} fontWeight="300">
+                          <Text fontSize="0.9rem" color={colorMode === 'light' ? '#57534e' : '#6b7280'} fontWeight="300">
                             Description
                           </Text>
                           <Box
@@ -750,32 +455,14 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                             lineHeight="1.2"
                             dangerouslySetInnerHTML={{ __html: selectedTool.longDesc }}
                           />
+
+                          <Text fontSize="0.9rem" color={colorMode === 'light' ? '#57534e' : '#6b7280'} fontWeight="300">
+                            Actions ({selectedToolActions.length})
+                          </Text>
+                          <Box>
+                            {renderActionsList()}
+                          </Box>
                         </Grid>
-
-                        {/* Actions Section */}
-                        <VStack spacing="1rem" flex="1" align="stretch" minH="0">
-                          <Box 
-                            display="flex" 
-                            justifyContent="space-between" 
-                            alignItems="center" 
-                            pb="0.5rem" 
-                            borderBottom="1px solid" 
-                            borderBottomColor={colorMode === 'light' ? '#e7e5e4' : '#374151'}
-                          >
-                            <Heading as="h6" fontSize="1.1rem" fontWeight="600" color={colorMode === 'light' ? '#0a0a0a' : '#f5f5f4'} m="0">
-                              Available Actions {!actionsLoading && selectedToolActions.length > 0 && `(${selectedToolActions.length})`}
-                            </Heading>
-                            {actionsLoading && (
-                              <Text color={colorMode === 'light' ? '#a8a29e' : '#6b7280'} fontStyle="italic">
-                                Loading actions...
-                              </Text>
-                            )}
-                          </Box>
-
-                          <Box flex="1" minH="0">
-                            {renderActionsTable()}
-                          </Box>
-                        </VStack>
                       </VStack>
                     )}
                   </Box>
