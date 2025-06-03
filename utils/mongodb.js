@@ -1,6 +1,13 @@
 const { MongoClient } = require('mongodb');
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://pica:NOxXPJNWKymUsMJv@inhotel.6xjwr.mongodb.net/events-service?retryWrites=true&w=majority';
+// MongoDB URI should be provided via environment variable for security
+const MONGO_URI = process.env.MONGO_URI;
+
+if (!MONGO_URI) {
+  console.error('❌ MONGO_URI environment variable is required but not provided');
+  console.error('Please set MONGO_URI in your environment or .env file');
+  process.exit(1);
+}
 
 let client = null;
 let db = null;
