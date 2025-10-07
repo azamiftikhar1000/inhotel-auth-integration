@@ -182,18 +182,79 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
     }
   };
 
-  // Handle tool connection
-  const handleToolConnect = (tool: Tool) => {
+  const evaluateToolConnectability = (tool: Tool, log: boolean = false) => {
     const normalize = (s?: string) => (s || '').toLowerCase();
     const tName = normalize(tool.name);
     const tTitle = normalize(tool.title);
-    const platform = connectedPlatforms.find((p) => {
-      const candidates = [p.platform, p.title, p.name].map(normalize);
-      return candidates.includes(tName) || candidates.includes(tTitle);
-    });
+    let matchedPlatform: ConnectionPlatform | undefined;
 
-    if (!platform || !platform.connectionDefinitionId) {
-      console.warn(`No matching platform found for tool: ${tool.name}`);
+    for (const p of connectedPlatforms) {
+      const candidates = [p.platform, p.title, p.name].map(normalize);
+      const matched = candidates.includes(tName) || candidates.includes(tTitle);
+      if (log) {
+        console.debug('[ToolCatalog] match-check', {
+          tool: { id: tool.id, name: tName, title: tTitle },
+          platform: { id: p.id, name: normalize(p.name), title: normalize(p.title), platform: normalize(p.platform) },
+          candidates,
+          matched,
+        });
+      }
+      if (matched) {
+        matchedPlatform = p;
+        break;
+      }
+    }
+
+    if (!matchedPlatform) {
+      if (log) {
+        console.info('[ToolCatalog] Tool not connectable: no matching platform', {
+          tool: { id: tool.id, name: tName, title: tTitle },
+          platformsConsidered: connectedPlatforms.length,
+        });
+      }
+      return { connectable: false, platform: undefined as ConnectionPlatform | undefined };
+    }
+
+    if (!matchedPlatform.connectionDefinitionId) {
+      if (log) {
+        console.info('[ToolCatalog] Tool not connectable: missing connectionDefinitionId', {
+          tool: { id: tool.id, name: tName, title: tTitle },
+          platform: {
+            id: matchedPlatform.id,
+            name: matchedPlatform.name,
+            title: matchedPlatform.title,
+            platform: matchedPlatform.platform,
+          },
+        });
+      }
+    }
+
+    if (log) {
+      const hasClientId = Boolean(matchedPlatform.secret?.clientId);
+      console.debug('[ToolCatalog] Tool connectability evaluation', {
+        tool: { id: tool.id, name: tName, title: tTitle },
+        platform: {
+          id: matchedPlatform.id,
+          name: matchedPlatform.name,
+          title: matchedPlatform.title,
+          platform: matchedPlatform.platform,
+          connectionDefinitionId: matchedPlatform.connectionDefinitionId,
+          hasClientId,
+          environment: matchedPlatform.environment,
+        },
+      });
+    }
+
+    return { connectable: Boolean(matchedPlatform.connectionDefinitionId), platform: matchedPlatform };
+  };
+
+  // Handle tool connection
+  const handleToolConnect = (tool: Tool) => {
+    const { connectable, platform } = evaluateToolConnectability(tool, true);
+    if (!connectable || !platform?.connectionDefinitionId) {
+      console.warn('[ToolCatalog] Cannot connect tool - not connectable', {
+        tool: { id: tool.id, name: tool.name, title: tool.title },
+      });
       return;
     }
 
@@ -208,14 +269,8 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
 
   // Check if a tool can be connected
   const isToolConnectable = (tool: Tool) => {
-    const normalize = (s?: string) => (s || '').toLowerCase();
-    const tName = normalize(tool.name);
-    const tTitle = normalize(tool.title);
-    const platform = connectedPlatforms.find((p) => {
-      const candidates = [p.platform, p.title, p.name].map(normalize);
-      return candidates.includes(tName) || candidates.includes(tTitle);
-    });
-    return Boolean(platform && platform.connectionDefinitionId);
+    const { connectable } = evaluateToolConnectability(tool, false);
+    return connectable;
   };
 
   // Filter tools based on search
@@ -263,6 +318,13 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
   useEffect(() => {
     filterTools(searchQuery);
   }, [searchQuery, allTools]);
+
+  useEffect(() => {
+    if (selectedTool) {
+      // Log once whenever the selection changes for better diagnostics
+      evaluateToolConnectability(selectedTool, true);
+    }
+  }, [selectedTool, connectedPlatforms]);
 
   // Render actions list
   const renderActionsList = () => {
