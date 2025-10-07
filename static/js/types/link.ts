@@ -12,6 +12,7 @@ export interface ConnectionPlatform {
   id: string;
   name: string;
   platform: string;
+  type?: string;
   feature?: string;
   icon?: string;
   description?: string;

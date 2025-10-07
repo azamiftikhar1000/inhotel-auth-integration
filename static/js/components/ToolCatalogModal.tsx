@@ -189,12 +189,12 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
     let matchedPlatform: ConnectionPlatform | undefined;
 
     for (const p of connectedPlatforms) {
-      const candidates = [p.platform, p.title, p.name].map(normalize);
+      const candidates = [p.platform, p.title, p.name, p.type].map(normalize);
       const matched = candidates.includes(tName) || candidates.includes(tTitle);
       if (log) {
         console.debug('[ToolCatalog] match-check', {
           tool: { id: tool.id, name: tName, title: tTitle },
-          platform: { id: p.id, name: normalize(p.name), title: normalize(p.title), platform: normalize(p.platform) },
+          platform: { id: p.id, name: normalize(p.name), title: normalize(p.title), platform: normalize(p.platform), type: normalize(p.type) },
           candidates,
           matched,
         });
@@ -238,6 +238,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
           name: matchedPlatform.name,
           title: matchedPlatform.title,
           platform: matchedPlatform.platform,
+          type: matchedPlatform.type,
           connectionDefinitionId: matchedPlatform.connectionDefinitionId,
           hasClientId,
           environment: matchedPlatform.environment,
