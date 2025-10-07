@@ -205,7 +205,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
   // Check if a tool can be connected
   const isToolConnectable = (tool: Tool) => {
     const platform = connectedPlatforms.find(
-      (p) => p.type.toLoweCase() === tool.name.toLowerCase() || p.title.toLowerCase() === tool.name.toLowerCase() || p.title.toLowerCase() === tool.title.toLowerCase() || p.name.toLowerCase() === tool.name.toLowerCase() || p.name.toLowerCase() === tool.title.toLowerCase()
+      (p) => p.type.toLowerCase() === tool.name.toLowerCase() || p.title.toLowerCase() === tool.name.toLowerCase() || p.title.toLowerCase() === tool.title.toLowerCase() || p.name.toLowerCase() === tool.name.toLowerCase() || p.name.toLowerCase() === tool.title.toLowerCase()
     );
     return platform && platform.connectionDefinitionId;
   };
