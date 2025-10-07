@@ -184,9 +184,13 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
 
   // Handle tool connection
   const handleToolConnect = (tool: Tool) => {
-    const platform = connectedPlatforms.find(
-      (p) => p.title === tool.name || p.title === tool.title || p.name === tool.name
-    );
+    const normalize = (s?: string) => (s || '').toLowerCase();
+    const tName = normalize(tool.name);
+    const tTitle = normalize(tool.title);
+    const platform = connectedPlatforms.find((p) => {
+      const candidates = [p.platform, p.title, p.name].map(normalize);
+      return candidates.includes(tName) || candidates.includes(tTitle);
+    });
 
     if (!platform || !platform.connectionDefinitionId) {
       console.warn(`No matching platform found for tool: ${tool.name}`);
@@ -204,10 +208,14 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
 
   // Check if a tool can be connected
   const isToolConnectable = (tool: Tool) => {
-    const platform = connectedPlatforms.find(
-      (p) => p.type.toLowerCase() === tool.name.toLowerCase() || p.title.toLowerCase() === tool.name.toLowerCase() || p.title.toLowerCase() === tool.title.toLowerCase() || p.name.toLowerCase() === tool.name.toLowerCase() || p.name.toLowerCase() === tool.title.toLowerCase()
-    );
-    return platform && platform.connectionDefinitionId;
+    const normalize = (s?: string) => (s || '').toLowerCase();
+    const tName = normalize(tool.name);
+    const tTitle = normalize(tool.title);
+    const platform = connectedPlatforms.find((p) => {
+      const candidates = [p.platform, p.title, p.name].map(normalize);
+      return candidates.includes(tName) || candidates.includes(tTitle);
+    });
+    return Boolean(platform && platform.connectionDefinitionId);
   };
 
   // Filter tools based on search
