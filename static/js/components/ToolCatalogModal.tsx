@@ -408,9 +408,9 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
       <Modal isOpen={isOpen} onClose={onClose} size="6xl" closeOnOverlayClick={false}>
         <ModalOverlay bg="rgba(0,0,0,0.4)" />
         <ModalContent
-          maxW="95vw"
-          maxH="90vh"
-          bg={colorMode === 'light' ? '#f8f6f3' : '#1a1a1a'}
+          w="90vw"
+          h="80vh"
+          bg="var(--sand-060, #f9f3ec)"
           border="2px solid"
           borderColor={colorMode === 'light' ? '#10b981' : '#10b981'}
           borderRadius="1.25rem"
@@ -420,10 +420,20 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
             fontSize="3rem"
             w="2rem"
             h="2rem"
-            color={colorMode === 'light' ? '#10b981' : '#10b981'}
+            color="var(--green-300, #a1d3ba)"
             top="12px"
             right="12px"
-            _hover={{ bg: '#ecfdf5', borderRadius: '50%' }}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            bg="none"
+            border="none"
+            outline="none"
+            boxShadow="none"
+            cursor="pointer"
+            transition="background 0.2s"
+            _focus={{ boxShadow: 'none' }}
+            _hover={{ color: 'var(--green-400, #82c4a3)', bg: 'var(--sand-100, #f4e9dc)', borderRadius: '50%' }}
           />
 
           <ModalBody p="0" display="flex" flexDirection="column" overflow="hidden" h="100%">
@@ -439,18 +449,20 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
               </VStack>
 
               {/* Search */}
-              <Box display="flex" justifyContent="center" flexShrink={0}>
+              <Box display="flex" justifyContent="center" flexShrink={0} mt="0.75rem" mb="1.75rem">
                 <Input
                   placeholder="Search by name, description, category, tags, actions…"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  maxW="500px"
+                  maxW="560px"
                   w="100%"
-                  p="0.75rem 1.25rem"
+                  h="44px"
+                  p="0 1.25rem"
                   fontSize="1rem"
                   border="1px solid"
                   borderColor={colorMode === 'light' ? '#e7e5e4' : '#374151'}
-                  borderRadius="1.5rem"
+                  borderRadius="9999px"
+                  bg="#ffffff"
                   _placeholder={{ color: colorMode === 'light' ? '#a8a29e' : '#6b7280' }}
                   _focus={{ 
                     outline: 'none', 
@@ -574,9 +586,9 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                   flexShrink={0}
                 >
                   <Box
-                    bg={selectedTool ? '#ffffff' : (colorMode === 'light' ? '#faf9f7' : '#2a2a2a')}
+                    bg="#ffffff"
                     border="1px solid"
-                    borderColor={colorMode === 'light' ? '#f5f5f4' : '#374151'}
+                    borderColor={colorMode === 'light' ? '#e7e5e4' : '#374151'}
                     borderRadius="0.25rem"
                     p="16px"
                     overflowY="auto"
