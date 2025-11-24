@@ -410,11 +410,16 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
         <ModalContent
           w="90vw"
           h="80vh"
+          maxW="90vw"
           bg="var(--sand-060, #f9f3ec)"
           border="2px solid"
-          borderColor={colorMode === 'light' ? '#10b981' : '#10b981'}
+          borderColor="var(--green-300, #a1d3ba)"
           borderRadius="1.25rem"
           p="1.5rem"
+          boxSizing="border-box"
+          display="flex"
+          flexDirection="column"
+          position="relative"
         >
           <ModalCloseButton
             fontSize="3rem"
