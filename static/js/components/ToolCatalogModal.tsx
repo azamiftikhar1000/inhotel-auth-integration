@@ -12,6 +12,7 @@ import {
   Input,
   Button,
   Box,
+  Spinner,
   Image,
   Grid,
   GridItem,
@@ -39,6 +40,8 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
   const [fetched, setFetched] = useState(false);
   const [assistantId, setAssistantId] = useState<string | null>(null);
   const [assistantLookupComplete, setAssistantLookupComplete] = useState(false);
+  const [toolsLoading, setToolsLoading] = useState(false);
+  const [lookupError, setLookupError] = useState<string>('');
 
   const [colorMode] = useGlobal(['colormode', 'selected']);
 
@@ -54,38 +57,64 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
         if (!linkHeaders?.['X-Pica-Secret']) {
           console.log('No X-Pica-Secret found in linkHeaders');
           setAssistantLookupComplete(true);
+          setLookupError("Couldn't identify the assistant. Missing secret.");
+          setToolsLoading(false);
           return;
         }
 
         const secret = linkHeaders['X-Pica-Secret'] as string;
         console.log(`Processing secret: ${secret.substring(0, 20)}...`);
 
-        // Call our assistant lookup API that queries MongoDB
-        const response = await fetch('/api/assistant/lookup', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            secret: secret,
-            options: {
-              retryAlternative: true,
-              includeMetadata: false,
-              skipToolsFetch: true
-            }
-          }),
-        });
+        // Retry a few times with short timeouts for robustness
+        const attempts = 3;
+        let success = false;
+        for (let i = 0; i < attempts; i++) {
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 1500);
+            const response = await fetch('/api/assistant/lookup', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                secret: secret,
+                options: {
+                  retryAlternative: true,
+                  includeMetadata: false,
+                  skipToolsFetch: true
+                }
+              }),
+              signal: controller.signal,
+            });
+            clearTimeout(timeoutId);
 
-        if (response.ok) {
-          const result = await response.json();
-          if (result.success && result.assistant_id) {
-            setAssistantId(result.assistant_id);
-            console.log(`Assistant ID found: ${result.assistant_id}`);
-          } else {
-            console.log('No assistant_id found in response:', result);
+            if (response.ok) {
+              const result = await response.json();
+              if (result.success && result.assistant_id) {
+                setAssistantId(result.assistant_id);
+                console.log(`Assistant ID found: ${result.assistant_id}`);
+                success = true;
+                break;
+              }
+            } else {
+              console.warn('Failed to lookup assistant:', response.statusText);
+            }
+          } catch (err) {
+            if ((err as any)?.name === 'AbortError') {
+              console.warn(`Assistant lookup try ${i + 1} timed out`);
+            } else {
+              console.warn(`Assistant lookup try ${i + 1} failed`, err);
+            }
           }
+          // Small delay before retry
+          await new Promise((r) => setTimeout(r, 300));
+        }
+        if (!success) {
+          setLookupError("Couldn't identify the assistant. Please refresh and try again.");
+          setToolsLoading(false);
         } else {
-          console.warn('Failed to lookup assistant:', response.statusText);
+          setLookupError('');
         }
       } catch (error) {
         console.error('Error extracting assistant_id:', error);
@@ -110,7 +139,11 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
         console.log(`Fetching tools with assistant_id: ${assistantId}`);
       }
 
-      const res = await fetch(url, { cache: 'no-store' });
+      // Timeout to avoid hanging on slow networks
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
+      const res = await fetch(url, { cache: 'no-store', signal: controller.signal });
+      clearTimeout(timeoutId);
       const json: APIResponse<any[]> = await res.json();
       
       if (json.status_code === 0 && Array.isArray(json.data)) {
@@ -291,23 +324,32 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
     setFilteredTools(filtered);
   };
 
-  // Load tools only after assistant lookup is complete
+  // While waiting for assistantId, show skeleton but don't fetch unrefined tools
+  useEffect(() => {
+    if (isOpen && !fetched) {
+      setToolsLoading(true);
+    }
+  }, [isOpen, fetched]);
+
+  // Fetch tools only after we have assistantId (refined results)
   useEffect(() => {
     const loadTools = async () => {
-      if (!fetched && assistantLookupComplete) {
+      if (!fetched && assistantId) {
         setFetched(true);
+        setToolsLoading(true);
         try {
           const tools = await fetchTools();
           setAllTools(tools);
           setFilteredTools(tools);
         } catch (error) {
           console.error('Error loading tools:', error);
+        } finally {
+          setToolsLoading(false);
         }
       }
     };
-
     loadTools();
-  }, [fetched, assistantLookupComplete]);
+  }, [fetched, assistantId]);
 
   // Reset fetched state when assistantId changes
   useEffect(() => {
@@ -419,7 +461,25 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                 />
               </Box>
 
+              {lookupError && (
+                <Box
+                  bg={colorMode === 'light' ? '#fef2f2' : '#3f1d1d'}
+                  border="1px solid"
+                  borderColor={colorMode === 'light' ? '#fecaca' : '#7f1d1d'}
+                  color={colorMode === 'light' ? '#991b1b' : '#fecaca'}
+                  borderRadius="0.5rem"
+                  p="0.5rem 0.75rem"
+                >
+                  {lookupError}
+                </Box>
+              )}
+
               {/* Main Content - Fixed Layout */}
+              {toolsLoading ? (
+                <Box flex="1" minH="0" display="flex" alignItems="center" justifyContent="center">
+                  <Spinner thickness="3px" speed="0.6s" emptyColor="gray.200" color="#a1d3ba" size="lg" />
+                </Box>
+              ) : (
               <HStack spacing="1rem" flex="1" minH="0" align="stretch">
                 {/* Tools Grid - Fixed Width */}
                 <Box 
@@ -449,59 +509,60 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                     }}
                   >
                     {filteredTools.map((tool) => (
-                      <Box
-                        key={tool.id}
-                        bg={selectedTool?.id === tool.id ? '#ffffff' : (colorMode === 'light' ? '#faf9f7' : '#2a2a2a')}
-                        color={colorMode === 'light' ? '#1c1917' : '#f5f5f4'}
-                        border="1px solid"
-                        borderColor={selectedTool?.id === tool.id ? '#10b981' : (colorMode === 'light' ? '#f5f5f4' : '#374151')}
-                        borderRadius="0.25rem"
-                        cursor="pointer"
-                        p="0.75rem"
-                        minH="88px"
-                        maxH="140px"
-                        overflow="hidden"
-                        transform="scale(1.00)"
-                        transition="transform 0.2s ease, box-shadow 0.2s, border 0.2s, background 0.2s"
-                        _hover={{
-                          bg: selectedTool?.id === tool.id ? '#ffffff' : (colorMode === 'light' ? '#f8f6f3' : '#374151'),
-                          transform: 'scale(1.00)',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                          borderColor: '#10b981',
-                        }}
-                        onClick={() => handleToolSelect(tool)}
-                      >
-                        <HStack spacing="0.75rem" mb="0">
-                          <Image
-                            src={tool.logo}
-                            w="64px"
-                            h="64px"
-                            objectFit="contain"
-                            alt={tool.title}
-                          />
-                          <VStack align="start" flex="1">
-                            <Text fontSize="1rem" fontWeight="medium" color={colorMode === 'light' ? '#0a0a0a' : '#f5f5f4'} m="4px 0">
-                              {tool.title}
-                            </Text>
-                            <Text 
-                              fontSize="0.9rem" 
-                              color={colorMode === 'light' ? '#262626' : '#a3a3a3'} 
-                              mt="0" 
-                              lineHeight="1.1"
-                              overflow="hidden"
-                              textOverflow="ellipsis"
-                              display="-webkit-box"
-                              css={{
-                                WebkitLineClamp: 3,
-                                WebkitBoxOrient: 'vertical',
-                              }}
-                            >
-                              {tool.shortDesc}
-                            </Text>
-                          </VStack>
-                        </HStack>
-                      </Box>
-                    ))}
+                          <Box
+                            key={tool.id}
+                            bg={selectedTool?.id === tool.id ? '#ffffff' : (colorMode === 'light' ? '#faf9f7' : '#2a2a2a')}
+                            color={colorMode === 'light' ? '#1c1917' : '#f5f5f4'}
+                            border="1px solid"
+                            borderColor={selectedTool?.id === tool.id ? '#10b981' : (colorMode === 'light' ? '#f5f5f4' : '#374151')}
+                            borderRadius="0.25rem"
+                            cursor="pointer"
+                            p="0.75rem"
+                            minH="88px"
+                            maxH="140px"
+                            overflow="hidden"
+                            transform="scale(1.00)"
+                            transition="transform 0.2s ease, box-shadow 0.2s, border 0.2s, background 0.2s"
+                            _hover={{
+                              bg: selectedTool?.id === tool.id ? '#ffffff' : (colorMode === 'light' ? '#f8f6f3' : '#374151'),
+                              transform: 'scale(1.00)',
+                              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                              borderColor: '#10b981',
+                            }}
+                            onClick={() => handleToolSelect(tool)}
+                          >
+                            <HStack spacing="0.75rem" mb="0">
+                              <Image
+                                src={tool.logo}
+                                w="64px"
+                                h="64px"
+                                objectFit="contain"
+                                alt={tool.title}
+                              />
+                              <VStack align="start" flex="1">
+                                <Text fontSize="1rem" fontWeight="medium" color={colorMode === 'light' ? '#0a0a0a' : '#f5f5f4'} m="4px 0">
+                                  {tool.title}
+                                </Text>
+                                <Text 
+                                  fontSize="0.9rem" 
+                                  color={colorMode === 'light' ? '#262626' : '#a3a3a3'} 
+                                  mt="0" 
+                                  lineHeight="1.1"
+                                  overflow="hidden"
+                                  textOverflow="ellipsis"
+                                  display="-webkit-box"
+                                  css={{
+                                    WebkitLineClamp: 3,
+                                    WebkitBoxOrient: 'vertical',
+                                  }}
+                                >
+                                  {tool.shortDesc}
+                                </Text>
+                              </VStack>
+                            </HStack>
+                          </Box>
+                        ))
+                    }
                   </VStack>
                 </Box>
 
@@ -524,15 +585,15 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                     h="100%"
                   >
                     {!selectedTool ? (
-                      <Image
-                        src="https://cdn.prod.website-files.com/657ae60d92ed823479730a3f/67f93be4b1e4cf832343dce6_inhotel-pineapple-sand-060.svg"
-                        alt="Pineapple background image"
-                        m="auto"
-                        maxH="80%"
-                        maxW="80%"
-                        w="auto"
-                        h="auto"
-                      />
+                        <Image
+                          src="https://cdn.prod.website-files.com/657ae60d92ed823479730a3f/67f93be4b1e4cf832343dce6_inhotel-pineapple-sand-060.svg"
+                          alt="Pineapple background image"
+                          m="auto"
+                          maxH="80%"
+                          maxW="80%"
+                          w="auto"
+                          h="auto"
+                        />
                     ) : (
                       <VStack spacing="1rem" align="stretch" h="100%">
                         {/* Header: name left, logo right */}
@@ -613,6 +674,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                   </Box>
                 </Box>
               </HStack>
+              )}
             </VStack>
           </ModalBody>
           <ModalFooter p="0" mt="1rem" display="flex" gap="0.5rem">
