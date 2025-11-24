@@ -30,6 +30,16 @@ export interface KnowledgeAPIResponse {
   rows: ToolAction[];
 }
 
+export interface ActionAPIResponse {
+  status_code: number;
+  message: string;
+  data: {
+    responseType: string;
+    args: {
+      rows: ToolAction[];
+    };
+  };
+}
 export interface ToolCatalogModalProps {
   isOpen: boolean;
   onClose: () => void;

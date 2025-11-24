@@ -5,6 +5,7 @@ import {
   ModalContent,
   ModalCloseButton,
   ModalBody,
+  ModalFooter,
   VStack,
   HStack,
   Text,
@@ -15,10 +16,9 @@ import {
   Grid,
   GridItem,
   Heading,
-  Link,
   useColorMode,
 } from '@chakra-ui/react';
-import { Tool, ToolAction, APIResponse, KnowledgeAPIResponse, ToolCatalogModalProps } from '../types/toolCatalog';
+import { Tool, ToolAction, APIResponse, KnowledgeAPIResponse, ActionAPIResponse, ToolCatalogModalProps } from '../types/toolCatalog';
 import { ConnectionPlatform } from '../types/link';
 import useGlobal from '../logic/hooks/useGlobal';
 
@@ -45,6 +45,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
   // API URLs
   const API_URL = 'https://backend.inhotel.io/tool/nondefault';
   const KNOWLEDGE_API_URL = 'https://platform-backend.inhotel.io/v1/knowledge';
+  const ACTION_API_URL = 'https://backend.inhotel.io/pica/connection-model-defs';
 
   // Extract assistant_id from linkHeaders on mount
   useEffect(() => {
@@ -146,21 +147,21 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
   // Fetch actions for specific tool
   const fetchToolActions = async (toolName: string): Promise<ToolAction[]> => {
     try {
-      const url = `${KNOWLEDGE_API_URL}?limit=255&connectionPlatform=${encodeURIComponent(toolName)}`;
+      const url = `${ACTION_API_URL}?limit=255&connectionPlatform=${encodeURIComponent(toolName)}&include=title`;
       const res = await fetch(url, {
         cache: 'no-store',
-        headers: {
-          'X-Pica-Secret': 'sk_test_1_3pejYG_SdSxV9xkt5_GA8WoMsSnfBHvY1qpGhlX-6DKd9kyZO3ee9hWfjGWpt5dY0AzxvM51q6_45_Q6bJTWCTuax7yq4X96nhvB0uTwhhLlsxyJm02JqasmdeDVeHt08GxGPoiBc7I9u00-1EKOejw62kNO0M1EaEFqwaGXw1Y8IfFH'
-        }
+        // headers: {
+        //   'X-Pica-Secret': 'sk_test_1_3pejYG_SdSxV9xkt5_GA8WoMsSnfBHvY1qpGhlX-6DKd9kyZO3ee9hWfjGWpt5dY0AzxvM51q6_45_Q6bJTWCTuax7yq4X96nhvB0uTwhhLlsxyJm02JqasmdeDVeHt08GxGPoiBc7I9u00-1EKOejw62kNO0M1EaEFqwaGXw1Y8IfFH'
+        // }
       });
-      const json: KnowledgeAPIResponse = await res.json();
+      const json: ActionAPIResponse = await res.json();
       
-      if (json.type === 'read' && Array.isArray(json.rows)) {
-        return json.rows;
+      if (json.status_code === 0 && Array.isArray(json?.data?.args?.rows)) {
+        return json.data.args.rows;
       }
       throw new Error('Unexpected response format');
     } catch (err) {
-      console.warn('Actions fetch failed:', err);
+      console.error('Actions fetch failed:', err);
       return [];
     }
   };
@@ -398,7 +399,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
               {/* Search */}
               <Box display="flex" justifyContent="center" flexShrink={0}>
                 <Input
-                  placeholder="Search by name, description, or category tags…"
+                  placeholder="Search by name, description, category, tags, actions…"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   maxW="500px"
@@ -534,8 +535,11 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                       />
                     ) : (
                       <VStack spacing="1rem" align="stretch" h="100%">
-                        {/* Header with logo and Add button */}
+                        {/* Header: name left, logo right */}
                         <HStack justify="space-between" align="flex-start">
+                          <Heading as="h5" fontSize="1.375rem" m="0.25rem 0">
+                            {selectedTool.title}
+                          </Heading>
                           <Image
                             src={selectedTool.logo}
                             w="64px"
@@ -543,39 +547,40 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                             objectFit="contain"
                             alt={selectedTool.title}
                           />
-                          <Button
-                            bg={isToolConnectable(selectedTool) ? (colorMode === 'light' ? '#10b981' : '#10b981') : '#d1d5db'}
-                            color={isToolConnectable(selectedTool) ? "white" : '#9ca3af'}
-                            size="sm"
-                            borderRadius="md"
-                            _hover={isToolConnectable(selectedTool) ? { bg: '#059669' } : {}}
-                            onClick={() => handleToolConnect(selectedTool)}
-                            isDisabled={!isToolConnectable(selectedTool)}
-                            cursor={isToolConnectable(selectedTool) ? 'pointer' : 'not-allowed'}
-                            title={isToolConnectable(selectedTool) ? 'Connect this tool' : 'This tool is not available for connection'}
-                          >
-                            {isToolConnectable(selectedTool) ? 'Connect' : 'Not Available'}
-                          </Button>
                         </HStack>
 
-                        {/* Tool name */}
-                        <Heading as="h5" fontSize="1.375rem" textAlign="center" m="0.25rem 0">
-                          {selectedTool.title}
-                        </Heading>
-
-                        {/* Learn more */}
-                        <Box display="flex" justifyContent="center">
-                          <Link
-                            href={selectedTool.learnMore}
-                            fontSize="0.9rem"
-                            color={colorMode === 'light' ? '#a8a29e' : '#6b7280'}
-                            textDecoration="none"
-                            target="_blank"
-                            _hover={{ textDecoration: 'underline' }}
-                          >
-                            Learn more
-                          </Link>
-                        </Box>
+                        {/* Tags row */}
+                        <HStack spacing="0.5rem" flexWrap="wrap" mt="0.25rem">
+                          {selectedTool.categories && selectedTool.categories.length > 0 && (
+                            <>
+                              <Box
+                                as="span"
+                                fontSize="0.75rem"
+                                color={colorMode === 'light' ? '#111827' : '#e5e7eb'}
+                                bg={colorMode === 'light' ? '#eff6ff' : '#1f2937'}
+                                borderRadius="9999px"
+                                px="10px"
+                                py="2px"
+                              >
+                                {selectedTool.categories[0]}
+                              </Box>
+                              {selectedTool.categories.slice(1).map((tag, idx) => (
+                                <Box
+                                  key={`${tag}-${idx}`}
+                                  as="span"
+                                  fontSize="0.75rem"
+                                  color={colorMode === 'light' ? '#111827' : '#e5e7eb'}
+                                  bg={colorMode === 'light' ? '#ecfdf5' : '#064e3b'}
+                                  borderRadius="9999px"
+                                  px="10px"
+                                  py="2px"
+                                >
+                                  {tag}
+                                </Box>
+                              ))}
+                            </>
+                          )}
+                        </HStack>
 
                         {/* Details grid */}
                         <Grid templateColumns="max-content 1fr" rowGap="0.5rem" columnGap="1rem" mt="1rem">
@@ -610,6 +615,45 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
               </HStack>
             </VStack>
           </ModalBody>
+          <ModalFooter p="0" mt="1rem" display="flex" gap="0.5rem">
+            <Button
+              h="44px"
+              px="20px"
+              borderRadius="9999px"
+              bg="rgb(244, 233, 220)"
+              border="1px solid"
+              borderColor={colorMode === 'light' ? '#e7e5e4' : '#374151'}
+              color={colorMode === 'light' ? '#262626' : '#e5e7eb'}
+              _hover={{
+                bg: 'rgb(161, 211, 186)',
+                borderColor: 'rgb(161, 211, 186)',
+              }}
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
+            <Button
+              h="44px"
+              px="20px"
+              borderRadius="9999px"
+              bg="#ffffff"
+              border="1px solid"
+              borderColor={selectedTool && isToolConnectable(selectedTool) ? '#e7e5e4' : '#e5e7eb'}
+              color={selectedTool && isToolConnectable(selectedTool) ? (colorMode === 'light' ? '#111827' : '#e5e7eb') : '#9ca3af'}
+              _hover={selectedTool && isToolConnectable(selectedTool) ? {
+                bg: 'rgb(161, 211, 186)',
+                borderColor: 'rgb(161, 211, 186)',
+              } : {}}
+              onClick={() => {
+                if (selectedTool && isToolConnectable(selectedTool)) {
+                  handleToolConnect(selectedTool);
+                }
+              }}
+              isDisabled={!selectedTool || !isToolConnectable(selectedTool || ({} as any))}
+            >
+              Connect
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </>
