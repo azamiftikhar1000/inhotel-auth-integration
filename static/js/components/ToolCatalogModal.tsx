@@ -680,6 +680,8 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                                 className="tag-category"
                                 as="span"
                                 fontSize="0.75rem"
+                                fontFamily="Open Sans,sans-serif"
+                                fontWeight="300"
                                 color="var(--neutral--900)"
                                 bg="var(--blue-050, #edf0f7)"
                                 borderRadius="1rem"
@@ -709,22 +711,26 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
 
                         {/* Details grid */}
                         <Grid className="detail-grid" templateColumns="max-content 1fr" rowGap="0.5rem" columnGap="1rem" mt="1rem">
-                          <Text className="field-label">
+                          <Text className="field-label"
+                            fontFamily="Open Sans,sans-serif"
+                            fontWeight="300"
+                            color="var(--sand-400, #d3a873)"
+                          >
                             Provider
                           </Text>
-                          <Text className="tool-provider" m="0">
+                          <Text className="tool-provider" m="0" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--neutral--900)">
                             {selectedTool.provider}
                           </Text>
 
-                          <Text className="field-label">
+                          <Text className="field-label" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--sand-400, #d3a873)">
                             Description
                           </Text>
-                          <Box className="long-desc" dangerouslySetInnerHTML={{ __html: selectedTool.longDesc }} />
+                          <Box className="long-desc" dangerouslySetInnerHTML={{ __html: selectedTool.longDesc }} fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--neutral--900)" />
 
-                          <Text className="field-label">
+                          <Text className="field-label" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--sand-400, #d3a873)">
                             Actions ({selectedToolActions.length})
                           </Text>
-                          <Box className="actions-list">
+                          <Box className="actions-list" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--neutral--900)">
                             {renderActionsList()}
                           </Box>
                         </Grid>
