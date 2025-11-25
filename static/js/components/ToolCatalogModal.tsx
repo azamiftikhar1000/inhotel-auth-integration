@@ -650,6 +650,8 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                           maxW="80%"
                           w="auto"
                           h="auto"
+                          fontFamily="Open Sans,sans-serif"
+                          fontWeight="300"
                           lineHeight="1.667rem"
                           display="inline-block"
                           overflow="clip"
@@ -659,7 +661,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                       <VStack spacing="1rem" align="stretch" h="100%">
                         {/* Header: name left, logo right */}
                         <HStack className="details-top" justify="space-between" align="flex-start">
-                          <Heading className="tool-name" as="h5" fontFamily="Open Sans,sans-serif" fontSize="1.375rem" m="0.25rem 0">
+                          <Heading className="tool-name" as="h5" fontFamily="Open Sans,sans-serif" fontSize="1.375rem" m="0.25rem 0" fontWeight="300" color="var(--neutral--900)">
                             {selectedTool.title}
                           </Heading>
                           <Image
@@ -776,8 +778,9 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
               bg="var(--neutral--000, #ffffff)"
               border="1px solid"
               _hover={selectedTool && isToolConnectable(selectedTool) ? {
-                bg: 'rgb(161, 211, 186)',
-                borderColor: 'rgb(161, 211, 186)',
+                bg: 'var(--green-300, #a1d3ba)',
+                borderColor: 'var(--green-300, #a1d3ba)',
+                transform: 'translateY(-3px)',
               } : {}}
               borderColor={selectedTool && isToolConnectable(selectedTool) ? 'var(--neutral--200, #bfbfbf)' : '#e5e7eb'}
               color={selectedTool && isToolConnectable(selectedTool) ? 'var(--neutral--900, #0f0f0f)' : '#9ca3af'}
