@@ -22,6 +22,7 @@ import {
 import { Tool, ToolAction, APIResponse, KnowledgeAPIResponse, ActionAPIResponse, ToolCatalogModalProps } from '../types/toolCatalog';
 import { ConnectionPlatform } from '../types/link';
 import useGlobal from '../logic/hooks/useGlobal';
+import '../index.css';
 
 export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
   isOpen,
@@ -422,7 +423,9 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
           position="relative"
         >
           <ModalCloseButton
-            fontSize="3rem"
+            className="close-modal"
+            aria-label="Close modal"
+            fontSize="1.25rem"
             w="2rem"
             h="2rem"
             color="var(--green-300, #a1d3ba)"
@@ -430,6 +433,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
             right="12px"
             display="flex"
             alignItems="center"
+            font="inherit"
             justifyContent="center"
             bg="none"
             border="none"
@@ -442,13 +446,34 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
           />
 
           <ModalBody p="0" display="flex" flexDirection="column" overflow="hidden" h="100%">
-            <VStack spacing="4" align="stretch" h="100%" minH="0">
+            <VStack spacing="0" align="stretch" h="100%" minH="0">
               {/* Header */}
               <VStack spacing="2" align="start" flexShrink={0}>
-                <Heading as="h4" fontSize="1.75rem" m="0">
+                <Heading
+                  as="h4"
+                  id="portal-modal-title"
+                  className="portal-h4"
+                  color="var(--neutral--900)"
+                  mt="-6rem"
+                  mb="1rem"
+                  pt="6.5rem"
+                  fontFamily="Montserrat, sans-serif"
+                  fontSize="1.5rem"
+                  lineHeight="1.222em"
+                  fontWeight="400"
+                >
                   Connect a Tool
                 </Heading>
-                <Text color={colorMode === 'light' ? '#171717' : '#a3a3a3'} m="0">
+                <Text
+                  as="p"
+                  className="modal-subtitle"
+                  color="var(--neutral--900)"
+                  m="0 0 1rem 0"
+                  fontFamily="Open Sans,sans-serif"
+                  lineHeight="1.4em"
+                  fontSize="1.125rem"
+                  fontWeight="300"
+                >
                   Select systems and tools you wish to make available for the AI assistants in your organization.
                 </Text>
               </VStack>
@@ -456,23 +481,27 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
               {/* Search */}
               <Box display="flex" justifyContent="center" flexShrink={0} mt="0.75rem" mb="1.75rem">
                 <Input
+                  id="catalog-search"
                   placeholder="Search by name, description, category, tags, actions…"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  maxW="560px"
+                  maxW="500px"
                   w="100%"
                   h="44px"
-                  p="0 1.25rem"
+                  p="0.9rem 1.25rem"
+                  m="0.75rem auto 2rem"
                   fontSize="1rem"
+                  fontFamily="Open Sans,sans-serif"
+                  fontWeight="100"
                   border="1px solid"
-                  borderColor={colorMode === 'light' ? '#e7e5e4' : '#374151'}
+                  borderColor="var(--sand-200, #e9d4b9)"
                   borderRadius="9999px"
                   bg="#ffffff"
-                  _placeholder={{ color: colorMode === 'light' ? '#a8a29e' : '#6b7280' }}
+                  _placeholder={{ color: 'var(--sand-400, #d3a873)' }}
                   _focus={{ 
                     outline: 'none', 
                     border: '1px solid', 
-                    borderColor: '#10b981',
+                    borderColor: 'var(--green-300, #a1d3ba)',
                     boxShadow: 'none'
                   }}
                 />
@@ -506,12 +535,15 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                   overflow="hidden"
                   flexShrink={0}
                 >
-                  <VStack 
-                    spacing="0.5rem" 
-                    align="stretch" 
-                    overflowY="auto" 
-                    pr="0.5rem"
+                  <Box
+                    id="catalog-card-grid"
+                    className="card-grid"
+                    display="grid"
+                    rowGap=".5rem"
+                    alignContent="start"
+                    pr=".5rem"
                     h="100%"
+                    overflowY="auto"
                     css={{
                       '&::-webkit-scrollbar': {
                         width: '6px',
@@ -525,8 +557,9 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                       },
                     }}
                   >
-                    {filteredTools.map((tool) => (
+                        {filteredTools.map((tool) => (
                           <Box
+                            className="card"
                             key={tool.id}
                             bg={selectedTool?.id === tool.id ? '#ffffff' : (colorMode === 'light' ? '#faf9f7' : '#2a2a2a')}
                             color={colorMode === 'light' ? '#1c1917' : '#f5f5f4'}
@@ -548,20 +581,24 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                             }}
                             onClick={() => handleToolSelect(tool)}
                           >
-                            <HStack spacing="0.75rem" mb="0">
+                            <HStack className="card-header" spacing="0.75rem" mb="0">
                               <Image
+                                className="card-logo"
                                 src={tool.logo}
                                 w="64px"
                                 h="64px"
                                 objectFit="contain"
                                 alt={tool.title}
                               />
-                              <VStack align="start" flex="1">
-                                <Text fontSize="1rem" fontWeight="medium" color={colorMode === 'light' ? '#0a0a0a' : '#f5f5f4'} m="4px 0">
+                              <VStack className="card-title" align="start" flex="1">
+                                <Text className="card-name" fontSize="1rem" fontFamily="Open Sans,sans-serif" fontWeight="500" color={colorMode === 'light' ? '#0a0a0a' : '#f5f5f4'} m="4px 0">
                                   {tool.title}
                                 </Text>
                                 <Text 
+                                  className="card-desc"
                                   fontSize="0.9rem" 
+                                  fontFamily="Open Sans,sans-serif"
+                                  fontWeight="300"
                                   color={colorMode === 'light' ? '#262626' : '#a3a3a3'} 
                                   mt="0" 
                                   lineHeight="1.1"
@@ -580,7 +617,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                           </Box>
                         ))
                     }
-                  </VStack>
+                  </Box>
                 </Box>
 
                 {/* Details Panel - Fixed Width */}
@@ -591,6 +628,8 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                   flexShrink={0}
                 >
                   <Box
+                    id="catalog-details-panel"
+                    className="details-panel"
                     bg="#ffffff"
                     border="1px solid"
                     borderColor={colorMode === 'light' ? '#e7e5e4' : '#374151'}
@@ -603,6 +642,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                   >
                     {!selectedTool ? (
                         <Image
+                          className="empty-state"
                           src="https://cdn.prod.website-files.com/657ae60d92ed823479730a3f/67f93be4b1e4cf832343dce6_inhotel-pineapple-sand-060.svg"
                           alt="Pineapple background image"
                           m="auto"
@@ -610,15 +650,20 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                           maxW="80%"
                           w="auto"
                           h="auto"
+                          lineHeight="1.667rem"
+                          display="inline-block"
+                          overflow="clip"
+                          overflow-clip-margin="content-box"
                         />
                     ) : (
                       <VStack spacing="1rem" align="stretch" h="100%">
                         {/* Header: name left, logo right */}
-                        <HStack justify="space-between" align="flex-start">
-                          <Heading as="h5" fontSize="1.375rem" m="0.25rem 0">
+                        <HStack className="details-top" justify="space-between" align="flex-start">
+                          <Heading className="tool-name" as="h5" fontFamily="Open Sans,sans-serif" fontSize="1.375rem" m="0.25rem 0">
                             {selectedTool.title}
                           </Heading>
                           <Image
+                            className="detail-logo"
                             src={selectedTool.logo}
                             w="64px"
                             h="64px"
@@ -628,15 +673,16 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                         </HStack>
 
                         {/* Tags row */}
-                        <HStack spacing="0.5rem" flexWrap="wrap" mt="0.25rem">
+                        <HStack className="detail-tags-row" spacing="0.5rem" flexWrap="wrap" mt="0.25rem">
                           {selectedTool.categories && selectedTool.categories.length > 0 && (
                             <>
                               <Box
+                                className="tag-category"
                                 as="span"
                                 fontSize="0.75rem"
-                                color={colorMode === 'light' ? '#111827' : '#e5e7eb'}
-                                bg={colorMode === 'light' ? '#eff6ff' : '#1f2937'}
-                                borderRadius="9999px"
+                                color="var(--neutral--900)"
+                                bg="var(--blue-050, #edf0f7)"
+                                borderRadius="1rem"
                                 px="10px"
                                 py="2px"
                               >
@@ -644,12 +690,13 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                               </Box>
                               {selectedTool.categories.slice(1).map((tag, idx) => (
                                 <Box
+                                  className="tag-item"
                                   key={`${tag}-${idx}`}
                                   as="span"
                                   fontSize="0.75rem"
-                                  color={colorMode === 'light' ? '#111827' : '#e5e7eb'}
-                                  bg={colorMode === 'light' ? '#ecfdf5' : '#064e3b'}
-                                  borderRadius="9999px"
+                                  color="var(--neutral--900)"
+                                  bg="var(--green-050, #f0f8f4)"
+                                  borderRadius="1rem"
                                   px="10px"
                                   py="2px"
                                 >
@@ -661,28 +708,23 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                         </HStack>
 
                         {/* Details grid */}
-                        <Grid templateColumns="max-content 1fr" rowGap="0.5rem" columnGap="1rem" mt="1rem">
-                          <Text fontSize="0.9rem" color={colorMode === 'light' ? '#57534e' : '#6b7280'} fontWeight="300">
+                        <Grid className="detail-grid" templateColumns="max-content 1fr" rowGap="0.5rem" columnGap="1rem" mt="1rem">
+                          <Text className="field-label">
                             Provider
                           </Text>
-                          <Text fontSize="1rem" color={colorMode === 'light' ? '#262626' : '#d1d5db'} m="0">
+                          <Text className="tool-provider" m="0">
                             {selectedTool.provider}
                           </Text>
 
-                          <Text fontSize="0.9rem" color={colorMode === 'light' ? '#57534e' : '#6b7280'} fontWeight="300">
+                          <Text className="field-label">
                             Description
                           </Text>
-                          <Box
-                            fontSize="1rem"
-                            color={colorMode === 'light' ? '#262626' : '#d1d5db'}
-                            lineHeight="1.2"
-                            dangerouslySetInnerHTML={{ __html: selectedTool.longDesc }}
-                          />
+                          <Box className="long-desc" dangerouslySetInnerHTML={{ __html: selectedTool.longDesc }} />
 
-                          <Text fontSize="0.9rem" color={colorMode === 'light' ? '#57534e' : '#6b7280'} fontWeight="300">
+                          <Text className="field-label">
                             Actions ({selectedToolActions.length})
                           </Text>
-                          <Box>
+                          <Box className="actions-list">
                             {renderActionsList()}
                           </Box>
                         </Grid>
@@ -696,33 +738,45 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
           </ModalBody>
           <ModalFooter p="0" mt="1rem" display="flex" gap="0.5rem">
             <Button
-              h="44px"
+              className="button sand-green slim"
               px="20px"
+              fontFamily="Montserrat,sans-serif"
+              fontSize="1.125rem"
+              fontWeight="300"
+              py=".5rem"
               borderRadius="9999px"
-              bg="rgb(244, 233, 220)"
+              bg="var(--sand-100, #f4e9dc)"
               border="1px solid"
-              borderColor={colorMode === 'light' ? '#e7e5e4' : '#374151'}
-              color={colorMode === 'light' ? '#262626' : '#e5e7eb'}
+              borderColor="var(--sand-200, #e9d4b9)"
+              color="var(--neutral--900, #0f0f0f)"
+              fontStyle="normal"
               _hover={{
-                bg: 'rgb(161, 211, 186)',
-                borderColor: 'rgb(161, 211, 186)',
+                bg: 'var(--green-300, #a1d3ba)',
+                borderColor: 'var(--green-300, #a1d3ba)',
+                transform: 'translateY(-3px)',
               }}
               onClick={onClose}
             >
               Cancel
             </Button>
             <Button
-              h="44px"
+              className="button white-green slim"
               px="20px"
+              fontFamily="Montserrat,sans-serif"
+              fontSize="1.125rem"
+              fontWeight="300"
+              py=".5rem"
               borderRadius="9999px"
-              bg="#ffffff"
+              bg="var(--neutral--000, #ffffff)"
               border="1px solid"
-              borderColor={selectedTool && isToolConnectable(selectedTool) ? '#e7e5e4' : '#e5e7eb'}
-              color={selectedTool && isToolConnectable(selectedTool) ? (colorMode === 'light' ? '#111827' : '#e5e7eb') : '#9ca3af'}
               _hover={selectedTool && isToolConnectable(selectedTool) ? {
                 bg: 'rgb(161, 211, 186)',
                 borderColor: 'rgb(161, 211, 186)',
               } : {}}
+              borderColor={selectedTool && isToolConnectable(selectedTool) ? 'var(--neutral--200, #bfbfbf)' : '#e5e7eb'}
+              color={selectedTool && isToolConnectable(selectedTool) ? 'var(--neutral--900, #0f0f0f)' : '#9ca3af'}
+              fontStyle="normal"
+              pointerEvents="auto"
               onClick={() => {
                 if (selectedTool && isToolConnectable(selectedTool)) {
                   handleToolConnect(selectedTool);

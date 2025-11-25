@@ -1,5 +1,6 @@
 import ReactDOM from "react-dom/client";
 import App from "./App";
+import "./index.css";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { useEffect } from "react";
@@ -55,7 +56,7 @@ const MyApp = () => {
     components: {
       Button: {
         baseStyle: {
-          fontWeight: "600",
+          fontWeight: "500",
           padding: "0px 16px",
           fontSize: "14px",
           lineHeight: "20px",
@@ -75,17 +76,15 @@ const MyApp = () => {
       },
     },
     fonts: {
-      body: "Inter, sans-serif",
-      heading: "Inter, sans-serif",
+      body: "Open Sans, sans-serif",
+      heading: "Open Sans, sans-serif",
     },
     styles: {
       global: {
-        "*": {
-          fontSize: "13px",
-        },
         body: {
           bg: "transparent",
           fontFamily: "Inter, sans-serif",
+          fontSize: "14px",
         },
       },
     },
