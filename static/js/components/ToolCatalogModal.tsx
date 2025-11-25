@@ -406,8 +406,8 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} size="6xl" closeOnOverlayClick={false}>
-        <ModalOverlay bg="rgba(0,0,0,0.4)" />
+      <Modal isOpen={isOpen} onClose={onClose} size="6xl" closeOnOverlayClick={false} isCentered>
+        <ModalOverlay bg="rgba(0,0,0,0.4)" backdropFilter="blur(8px)" />
         <ModalContent
           w="90vw"
           h="80vh"
@@ -417,6 +417,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
           borderColor="var(--green-300, #a1d3ba)"
           borderRadius="1.25rem"
           p="1.5rem"
+          my="0"
           boxSizing="border-box"
           display="flex"
           flexDirection="column"
@@ -448,7 +449,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
           <ModalBody p="0" display="flex" flexDirection="column" overflow="hidden" h="100%">
             <VStack spacing="0" align="stretch" h="100%" minH="0">
               {/* Header */}
-              <VStack spacing="2" align="start" flexShrink={0}>
+              <VStack spacing="0" align="start" flexShrink={0}>
                 <Heading
                   as="h4"
                   id="portal-modal-title"
@@ -526,7 +527,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                   <Spinner thickness="3px" speed="0.6s" emptyColor="gray.200" color="#a1d3ba" size="lg" />
                 </Box>
               ) : (
-              <HStack spacing="1rem" flex="1" minH="0" align="stretch">
+              <HStack spacing="0" flex="1" minH="0" align="stretch">
                 {/* Tools Grid - Fixed Width */}
                 <Box 
                   w="50%" 
@@ -561,23 +562,22 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                           <Box
                             className="card"
                             key={tool.id}
-                            bg={selectedTool?.id === tool.id ? '#ffffff' : (colorMode === 'light' ? '#faf9f7' : '#2a2a2a')}
-                            color={colorMode === 'light' ? '#1c1917' : '#f5f5f4'}
+                            bg="var(--sand--040, #fdfaf7)"
+                            color="var(--neutral--900, #0f0f0f)"
                             border="1px solid"
-                            borderColor={selectedTool?.id === tool.id ? '#10b981' : (colorMode === 'light' ? '#f5f5f4' : '#374151')}
+                            borderColor="var(--sand--100, #e9d4b9)"
                             borderRadius="0.25rem"
                             cursor="pointer"
                             p="0.75rem"
-                            minH="88px"
-                            maxH="140px"
+                            h={{ base: '5.5rem', md: '6.5rem' }}
                             overflow="hidden"
                             transform="scale(1.00)"
                             transition="transform 0.2s ease, box-shadow 0.2s, border 0.2s, background 0.2s"
                             _hover={{
-                              bg: selectedTool?.id === tool.id ? '#ffffff' : (colorMode === 'light' ? '#f8f6f3' : '#374151'),
+                              bg: selectedTool?.id === tool.id ? 'var(--sand--020, #fefdfb)' : 'var(--sand--040, #fdfaf7)',
                               transform: 'scale(1.00)',
                               boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                              borderColor: '#10b981',
+                              borderColor: 'var(--green-300, #a1d3ba)',
                             }}
                             onClick={() => handleToolSelect(tool)}
                           >
@@ -590,8 +590,8 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                                 objectFit="contain"
                                 alt={tool.title}
                               />
-                              <VStack className="card-title" align="start" flex="1">
-                                <Text className="card-name" fontSize="1rem" fontFamily="Open Sans,sans-serif" fontWeight="500" color={colorMode === 'light' ? '#0a0a0a' : '#f5f5f4'} m="4px 0">
+                              <VStack className="card-title" align="start" flex="1" gap="0">
+                                <Text className="card-name" fontSize="1rem" fontFamily="Open Sans,sans-serif" fontWeight="500" color="var(--neutral--900, #0f0f0f)" m="4px 0">
                                   {tool.title}
                                 </Text>
                                 <Text 
@@ -599,7 +599,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                                   fontSize="0.9rem" 
                                   fontFamily="Open Sans,sans-serif"
                                   fontWeight="300"
-                                  color={colorMode === 'light' ? '#262626' : '#a3a3a3'} 
+                                  color="var(--neutral--800, #292929)" 
                                   mt="0" 
                                   lineHeight="1.1"
                                   overflow="hidden"
@@ -608,6 +608,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                                   css={{
                                     WebkitLineClamp: 3,
                                     WebkitBoxOrient: 'vertical',
+                                    wordBreak: 'normal',
                                   }}
                                 >
                                   {tool.shortDesc}
@@ -661,7 +662,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                       <VStack spacing="1rem" align="stretch" h="100%">
                         {/* Header: name left, logo right */}
                         <HStack className="details-top" justify="space-between" align="flex-start">
-                          <Heading className="tool-name" as="h5" fontFamily="Open Sans,sans-serif" fontSize="1.375rem" m="0.25rem 0" fontWeight="300" color="var(--neutral--900)">
+                          <Heading className="tool-name" as="h5" fontFamily="Open Sans,sans-serif" fontSize="1.375rem" m="0.25rem 0" fontWeight="300" color="var(--neutral--900)" lineHeight="1.222em">
                             {selectedTool.title}
                           </Heading>
                           <Image
@@ -698,6 +699,8 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                                   key={`${tag}-${idx}`}
                                   as="span"
                                   fontSize="0.75rem"
+                                  fontFamily="Open Sans,sans-serif"
+                                  fontWeight="300"
                                   color="var(--neutral--900)"
                                   bg="var(--green-050, #f0f8f4)"
                                   borderRadius="1rem"
@@ -716,7 +719,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                           <Text className="field-label"
                             fontFamily="Open Sans,sans-serif"
                             fontWeight="300"
-                            color="var(--sand-400, #d3a873)"
+                            color="var(--sand--400, #d3a873)"
                           >
                             Provider
                           </Text>
@@ -724,12 +727,12 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                             {selectedTool.provider}
                           </Text>
 
-                          <Text className="field-label" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--sand-400, #d3a873)">
+                          <Text className="field-label" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--sand--400, #d3a873)">
                             Description
                           </Text>
-                          <Box className="long-desc" dangerouslySetInnerHTML={{ __html: selectedTool.longDesc }} fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--neutral--900)" />
+                          <Box className="long-desc" dangerouslySetInnerHTML={{ __html: selectedTool.longDesc }} fontSize="1.15rem" lineHeight="1.4em" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--neutral--900)" mb="1rem" />
 
-                          <Text className="field-label" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--sand-400, #d3a873)">
+                          <Text className="field-label" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--sand--400, #d3a873)">
                             Actions ({selectedToolActions.length})
                           </Text>
                           <Box className="actions-list" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--neutral--900)">
@@ -753,9 +756,9 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
               fontWeight="300"
               py=".5rem"
               borderRadius="9999px"
-              bg="var(--sand-100, #f4e9dc)"
+              bg="var(--sand--100, #f4e9dc)"
               border="1px solid"
-              borderColor="var(--sand-200, #e9d4b9)"
+              borderColor="var(--sand--200, #e9d4b9)"
               color="var(--neutral--900, #0f0f0f)"
               fontStyle="normal"
               _hover={{
