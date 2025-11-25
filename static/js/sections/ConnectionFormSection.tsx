@@ -85,13 +85,17 @@ export const ConnectionFormSection = ({
       overflowY="auto"
       w="100%"
       h="100%"
+      bg="var(--sand-060, #f9f3ec)"
+      border="2px solid"
+      borderColor="var(--green-300, #a1d3ba)"
+      borderRadius="12px"
       sx={{
         "&::-webkit-scrollbar": {
           display: "none",
         },
       }}
     >
-      <VStack w="100%" padding="4">
+      <VStack w="100%" padding="4" spacing="3">
         <HStack justify="space-between" w="100%" align="center">
           <HStack
             cursor="pointer"
@@ -116,8 +120,8 @@ export const ConnectionFormSection = ({
         </HStack>
         <VStack
           w="100%"
-          py="5"
-          spacing="3"
+          py="4"
+          spacing="2"
           sx={{
             "&::-webkit-scrollbar": {
               display: "none",
@@ -126,12 +130,22 @@ export const ConnectionFormSection = ({
           overflowY="auto"
         >
           <Image src={definition?.frontend?.spec?.image} />
-          <Heading textAlign="center" as="h1" fontSize="xl">
+          <Heading
+            textAlign="center"
+            as="h1"
+            fontSize="xl"
+            fontFamily="Open Sans, sans-serif"
+            fontWeight="300"
+            color="var(--neutral--900, #0f0f0f)"
+            lineHeight="1.222em"
+          >
             {definition?.frontend?.spec?.title}
           </Heading>
           <Text
             textAlign="center"
-            color={colorMode === "light" ? "gray.500" : "gray.300"}
+            fontFamily="Open Sans, sans-serif"
+            fontWeight="300"
+            color="var(--neutral--600, #5c5c5c)"
           >
             {definition?.frontend?.spec?.category}
           </Text>
@@ -145,6 +159,18 @@ export const ConnectionFormSection = ({
                       w="100%"
                       key={form.name}
                     >
+                      {form?.type === "text" && (
+                        <Box w="100%">
+                          {form.label && (
+                            <Text fontSize="lg" fontWeight="bold" mb="1">
+                              {form.label}
+                            </Text>
+                          )}
+                          <Text fontSize="sm" color="var(--neutral--800, #292929)">
+                            {form.value || form.text || form.placeholder || ""}
+                          </Text>
+                        </Box>
+                      )}
                       {form?.type === "input" && (
                         <FormInput
                           name={form.name}
@@ -219,7 +245,16 @@ export const ConnectionFormSection = ({
                 })}
               </VStack>
               {definition?.frontend?.spec?.markdown && (
-                <Box maxW="100%" width="full" border={"1px dashed"} borderColor={colorMode === "light" ? "gray.400" : "gray.600"} borderRadius="md" px={2}>
+                <Box
+                  maxW="100%"
+                  width="full"
+                  bg="#ffffff"
+                  border="1px solid"
+                  borderColor="var(--sand-200, #e9d4b9)"
+                  borderRadius="md"
+                  px={3}
+                  py={2}
+                >
                   <MarkdownRenderer
                     markdown={definition.frontend.spec.markdown}
                   />
@@ -233,16 +268,22 @@ export const ConnectionFormSection = ({
               )}
               <Button
                 isLoading={isLoading}
+                className="button white-green slim"
+                px="20px"
+                py=".5rem"
+                borderRadius="9999px"
+                bg="var(--neutral--000, #ffffff)"
+                border="1px solid"
+                borderColor="var(--neutral--200, #bfbfbf)"
+                color="var(--neutral--900, #0f0f0f)"
+                fontStyle="normal"
                 _hover={{
-                  bg: colorMode === "light" ? "black" : "gray.100",
-                  color: colorMode === "light" ? "white" : "black",
+                  bg: "var(--green-300, #a1d3ba)",
+                  transform: "translateY(-3px)",
                 }}
-                bg={colorMode === "light" ? "black" : "gray.100"}
-                color={colorMode === "light" ? "white" : "black"}
                 loadingText="Connecting"
                 type="submit"
                 w="100%"
-                variant="base"
               >
                 {isLoading ? "Connecting" : "Connect"}
               </Button>

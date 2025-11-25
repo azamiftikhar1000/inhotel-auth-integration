@@ -40,6 +40,16 @@ export const FormInput = ({
         placeholder={placeholder}
         {...register(name, rules)}
         disabled={disabled}
+        bg="#ffffff"
+        border="1px solid"
+        borderColor="var(--sand-200, #e9d4b9)"
+        _focus={{
+          outline: "none",
+          border: "1px solid",
+          borderColor: "var(--green-300, #a1d3ba)",
+          bg: "var(--sand--020, #fefdfb)",
+          boxShadow: "none",
+        }}
       />
       <FormErrorMessage>{`${errors[name]?.message}`}</FormErrorMessage>
     </FormControl>

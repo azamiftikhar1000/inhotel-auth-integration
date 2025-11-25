@@ -8,7 +8,8 @@ export const OverlayModal = ({ children, whiteLabel }: { children: ReactElement,
     <VStack
       w="100vw"
       h="100vh"
-      bg={colorMode === "light" ? "rgba(8, 8, 8, 0.75)" : "rgba(20, 20, 20, 0.85)"}
+      bg="rgba(0, 0, 0, 0.4)"
+      backdropFilter="blur(8px)"
       display="flex"
       align="center"
       justify="center"
@@ -54,8 +55,8 @@ export const OverlayModal = ({ children, whiteLabel }: { children: ReactElement,
         >
           <HStack w="100%" justify="center" align="center">
             <Text fontSize="sm" color={colorMode === "light" ? "gray.400" : "#A1A1AA"} >Secured by</Text>
-            <a href="https://picaos.com" target="_blank" rel="noopener noreferrer">
-              <Image src={colorMode === "light" ? "logo-light.svg" : "logo-dark.svg"} h="15px" alt="AuthKit logo" />
+            <a href="https://inhotel.io" target="_blank" rel="noopener noreferrer">
+              <Image src={colorMode === "light" ? "https://cdn.prod.website-files.com/657ae60d92ed823479730a3f/67fb02a683fe906731362325_inhotel-logo-green-400.svg" : "https://cdn.prod.website-files.com/657ae60d92ed823479730a3f/67fb02a683fe906731362325_inhotel-logo-green-400.svg"} h="15px" alt="AuthKit logo" />
             </a>
           </HStack>
         </Button>}
