@@ -17,6 +17,7 @@ interface IProps {
   disabled?: boolean;
   value?: string;
   hidden?: boolean;
+  type?: string;
 }
 
 export const FormInput = ({
@@ -28,7 +29,8 @@ export const FormInput = ({
   errors,
   disabled,
   value,
-  hidden
+  hidden,
+  type = "text",
 }: IProps) => {
   return (
     <FormControl hidden={hidden} isInvalid={!!errors[name]}>
@@ -36,6 +38,7 @@ export const FormInput = ({
         {label}
       </FormLabel>
       <Input
+        type={type}
         defaultValue={value}
         placeholder={placeholder}
         {...register(name, rules)}

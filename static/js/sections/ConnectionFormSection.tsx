@@ -65,17 +65,17 @@ export const ConnectionFormSection = ({
 
   const formData = showNameInput
     ? [
-        {
-          name: "name",
-          type: "input",
-          label: "Name",
-          placeholder: "My Connection",
-          rules: {
-            required: "This field is required",
-          },
+      {
+        name: "name",
+        type: "input",
+        label: "Name",
+        placeholder: "My Connection",
+        rules: {
+          required: "This field is required",
         },
-        ...(definition?.frontend?.connectionForm?.formData || []),
-      ]
+      },
+      ...(definition?.frontend?.connectionForm?.formData || []),
+    ]
     : (definition?.frontend?.connectionForm?.formData || []);
 
   return (
@@ -159,7 +159,7 @@ export const ConnectionFormSection = ({
                       w="100%"
                       key={form.name}
                     >
-                      {form?.type === "text" && (
+                      {form?.type === "static_text" && (
                         <Box w="100%">
                           {form.label && (
                             <Text fontSize="lg" fontWeight="bold" mb="1">
@@ -171,19 +171,23 @@ export const ConnectionFormSection = ({
                           </Text>
                         </Box>
                       )}
-                      {form?.type === "input" && (
-                        <FormInput
-                          name={form.name}
-                          label={form.label}
-                          placeholder={form.placeholder}
-                          rules={form.rules}
-                          register={register}
-                          errors={errors}
-                          disabled={form.disabled}
-                          value={form.value}
-                          hidden={form.hidden}
-                        />
-                      )}
+                      {(form?.type === "input" ||
+                        form?.type === "text" ||
+                        form?.type === "email" ||
+                        form?.type === "url") && (
+                          <FormInput
+                            type={form.type === "input" ? "text" : form.type}
+                            name={form.name}
+                            label={form.label}
+                            placeholder={form.placeholder}
+                            rules={form.rules}
+                            register={register}
+                            errors={errors}
+                            disabled={form.disabled}
+                            value={form.value}
+                            hidden={form.hidden}
+                          />
+                        )}
                       {form?.type === "select" && (
                         <FormSelect
                           name={form.name}
