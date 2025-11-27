@@ -6,12 +6,25 @@ const express = require("express");
 const path = require("path");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 const { processBase64DataAndFetchTools, processSecretAndFetchTools, extractSecretFromBase64Data } = require("./utils/assistantService");
+let compression;
+try {
+  compression = require('compression');
+} catch (e) {
+  compression = null;
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
+
+// Enable gzip compression if available
+if (compression) {
+  app.use(compression());
+} else {
+  console.warn('compression package not installed; static responses will not be gzipped.');
+}
 
 // New API endpoints for assistant lookup and tools fetching
 app.post('/api/assistant/lookup', async (req, res) => {
@@ -88,8 +101,17 @@ app.use(
   })
 );
 
-// serve your webpack build
-app.use(express.static(path.join(__dirname, "dist")));
+// serve your webpack build with long cache headers
+app.use(express.static(path.join(__dirname, "dist"), {
+  setHeaders: (res, filePath) => {
+    if (/\.(js|css|png|jpg|jpeg|gif|svg|webp)$/.test(filePath)) {
+      // cache hashed assets aggressively
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    } else {
+      res.setHeader('Cache-Control', 'no-cache');
+    }
+  }
+}));
 
 // SPA fallback
 app.get("*", (req, res) => {
