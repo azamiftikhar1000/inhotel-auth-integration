@@ -107,9 +107,11 @@ export const ConnectionFormSection = ({
       >
         <HStack
           justify="end"
-          w="100%"
+          w="calc(100% + 2rem)"
+          margin="-1rem -1rem 0 -1rem"
           align="center"
-          pt={3}
+          pt="12px"
+          pr="12px"
           pb={2}
           position="sticky"
           top="0"
@@ -120,14 +122,23 @@ export const ConnectionFormSection = ({
             cursor="pointer"
             spacing="1"
             onClick={onBack}
-            color={colorMode === "light" ? "gray.500" : "#A1A1AA"}
+            color="var(--green-300, #a1d3ba)"
             align="center"
-
+            w="2rem"
+            h="2rem"
+            justify="center"
+            display="flex"
+            transition="all 0.2s"
+            borderRadius="50%"
+            _hover={{
+              color: "var(--green-400, #82c4a3)",
+              bg: "var(--sand-100, #f4e9dc)",
+            }}
           >
             {!isConnectionSelected && (
-              <HStack spacing="0" hidden={isLoading}>
-                <CloseIcon fontSize="12px" />
-              </HStack>
+              <Box hidden={isLoading}>
+                <CloseIcon fontSize="1.25rem" />
+              </Box>
             )}
           </HStack>
         </HStack>
