@@ -46,12 +46,13 @@ export const FormInput = ({
         bg="#ffffff"
         border="1px solid"
         borderColor="var(--sand-200, #e9d4b9)"
+        transition="all 0.2s cubic-bezier(0.4, 0, 0.2, 1)"
         _focus={{
           outline: "none",
           border: "1px solid",
           borderColor: "var(--green-300, #a1d3ba)",
           bg: "var(--sand--020, #fefdfb)",
-          boxShadow: "none",
+          boxShadow: "0 0 0 1px var(--green-300, #a1d3ba)",
         }}
       />
       <FormErrorMessage>{`${errors[name]?.message}`}</FormErrorMessage>

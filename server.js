@@ -30,7 +30,7 @@ if (compression) {
 app.post('/api/assistant/lookup', async (req, res) => {
   try {
     const { base64Data, secret, options = {} } = req.body;
-    
+
     let result;
     if (base64Data) {
       // Process base64 data to extract secret and fetch tools
@@ -44,7 +44,7 @@ app.post('/api/assistant/lookup', async (req, res) => {
         error: 'Either base64Data or secret must be provided'
       });
     }
-    
+
     res.json(result);
   } catch (error) {
     console.error('Error in assistant lookup endpoint:', error);
@@ -59,16 +59,16 @@ app.post('/api/assistant/lookup', async (req, res) => {
 app.post('/api/assistant/extract-secret', async (req, res) => {
   try {
     const { base64Data } = req.body;
-    
+
     if (!base64Data) {
       return res.status(400).json({
         success: false,
         error: 'base64Data is required'
       });
     }
-    
+
     const secret = extractSecretFromBase64Data(base64Data);
-    
+
     res.json({
       success: true,
       secret: secret,
@@ -89,7 +89,7 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
-    service: 'authkit-picaos'
+    service: 'auth-integration-inhotel'
   });
 });
 

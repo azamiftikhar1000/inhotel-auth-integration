@@ -34,7 +34,7 @@ export const OverlayModal = ({ children, whiteLabel }: { children: ReactElement,
         >
           {children}
         </VStack>
-       {!whiteLabel && <Button
+        {/* {!whiteLabel && <Button
           position="absolute"
           bottom="0"
           left="0"
@@ -59,7 +59,7 @@ export const OverlayModal = ({ children, whiteLabel }: { children: ReactElement,
               <Image src={colorMode === "light" ? "https://cdn.prod.website-files.com/657ae60d92ed823479730a3f/67fb02a683fe906731362325_inhotel-logo-green-400.svg" : "https://cdn.prod.website-files.com/657ae60d92ed823479730a3f/67fb02a683fe906731362325_inhotel-logo-green-400.svg"} h="15px" alt="AuthKit logo" />
             </a>
           </HStack>
-        </Button>}
+        </Button>} */}
       </VStack>
     </VStack>
   );

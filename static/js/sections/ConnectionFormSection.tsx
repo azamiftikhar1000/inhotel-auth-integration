@@ -1,4 +1,5 @@
-import { ChevronLeftIcon, CloseIcon, ExternalLinkIcon } from "@chakra-ui/icons";
+import { ChevronLeftIcon, CloseIcon, ExternalLinkIcon, InfoIcon } from "@chakra-ui/icons";
+import { motion } from "framer-motion";
 import {
   VStack,
   Image,
@@ -95,28 +96,40 @@ export const ConnectionFormSection = ({
         },
       }}
     >
-      <VStack w="100%" padding="4" spacing="3">
-        <HStack justify="space-between" w="100%" align="center">
+      <VStack
+        as={motion.div}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        w="100%"
+        padding="4"
+        spacing="3"
+      >
+        <HStack
+          justify="end"
+          w="100%"
+          align="center"
+          pt={3}
+          pb={2}
+          position="sticky"
+          top="0"
+          zIndex="10"
+          bg="var(--sand-060, #f9f3ec)"
+        >
           <HStack
             cursor="pointer"
-            spacing="0px"
+            spacing="1"
             onClick={onBack}
             color={colorMode === "light" ? "gray.500" : "#A1A1AA"}
             align="center"
+
           >
             {!isConnectionSelected && (
               <HStack spacing="0" hidden={isLoading}>
-                <ChevronLeftIcon fontSize="lg" />
-                <Text>Back</Text>
+                <CloseIcon fontSize="12px" />
               </HStack>
             )}
           </HStack>
-          <CloseIcon
-            fontSize="10px"
-            color={colorMode === "light" ? "gray.500" : "#A1A1AA"}
-            cursor="pointer"
-            onClick={onClose}
-          />
         </HStack>
         <VStack
           w="100%"
@@ -166,7 +179,11 @@ export const ConnectionFormSection = ({
                               {form.label}
                             </Text>
                           )}
-                          <Text fontSize="sm" color="var(--neutral--800, #292929)">
+                          <Text
+                            fontSize="sm"
+                            color="var(--neutral--800, #292929)"
+                            lineHeight="1.5"
+                          >
                             {form.value || form.text || form.placeholder || ""}
                           </Text>
                         </Box>
@@ -248,22 +265,7 @@ export const ConnectionFormSection = ({
                   );
                 })}
               </VStack>
-              {definition?.frontend?.spec?.markdown && (
-                <Box
-                  maxW="100%"
-                  width="full"
-                  bg="#ffffff"
-                  border="1px solid"
-                  borderColor="var(--sand-200, #e9d4b9)"
-                  borderRadius="md"
-                  px={3}
-                  py={2}
-                >
-                  <MarkdownRenderer
-                    markdown={definition.frontend.spec.markdown}
-                  />
-                </Box>
-              )}
+
               {error && (
                 <Alert borderRadius="5" status="error">
                   <AlertIcon />
@@ -291,6 +293,13 @@ export const ConnectionFormSection = ({
               >
                 {isLoading ? "Connecting" : "Connect"}
               </Button>
+              {definition?.frontend?.spec?.markdown && (
+                <Box maxW="100%" width="full">
+                  <MarkdownRenderer
+                    markdown={definition.frontend.spec.markdown}
+                  />
+                </Box>
+              )}
             </VStack>
           </form>
         </VStack>
