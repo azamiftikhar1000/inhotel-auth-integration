@@ -1,14 +1,15 @@
 import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
 import { Rules } from "../../types/integrations";
 import {
-  Button,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  IconButton,
   Input,
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import useGlobal from "../../logic/hooks/useGlobal";
 
@@ -52,15 +53,20 @@ export const FormPassword = ({
             boxShadow: "none",
           }}
         />
-        <InputRightElement  minW="max-content">
-          <Button fontSize="sm" _hover={{
-                  bg: colorMode === "light" ? "black" : "gray.100",
-                  color: colorMode === "light" ? "white" : "black",
-                }}
-                bg={colorMode === "light" ? "black" : "gray.100"}
-                color={colorMode === "light" ? "white" : "black"} borderRadius="md"  onClick={() => setShow(!show)}>
-            {show ? "Hide" : "Show"}
-          </Button>
+        <InputRightElement width="4.5rem" height="100%" alignItems="center" justifyContent="center">
+          <IconButton
+            aria-label={show ? "Hide password" : "Show password"}
+            variant="ghost"
+            size="sm"
+            fontSize="xl"
+            icon={show ? <ViewOffIcon /> : <ViewIcon />}
+            onClick={() => setShow(!show)}
+            _hover={{
+              bg: colorMode === "light" ? "sand.100" : "whiteAlpha.200",
+              color: colorMode === "light" ? "black" : "white",
+            }}
+            transition="all 0.2s"
+          />
         </InputRightElement>
       </InputGroup>
       <FormErrorMessage>{`${errors[name]?.message}`}</FormErrorMessage>
