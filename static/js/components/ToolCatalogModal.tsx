@@ -426,12 +426,11 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
           <ModalCloseButton
             className="close-modal"
             aria-label="Close modal"
-            fontSize="48px"
-            fontWeight="300"
-            fontFamily="'Open Sans', sans-serif"
+            fontSize="24px"
             w="32px"
             h="32px"
             color="rgb(161, 211, 186)"
+            position="absolute"
             top="12px"
             right="12px"
             display="flex"
@@ -688,8 +687,8 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                       ) : (
                         <VStack spacing="1rem" align="stretch" h="100%">
                           {/* Header: name left, logo right */}
-                          <HStack className="details-top" justify="space-between" align="flex-start">
-                            <Heading className="tool-name" as="h5" fontFamily="Open Sans,sans-serif" fontSize="1.375rem" m="0.25rem 0" fontWeight="300" color="var(--neutral--900)" lineHeight="1.222em">
+                          <HStack className="details-top" justify="space-between" align="flex-start" mb="0">
+                            <Heading className="tool-name" as="h5" fontFamily="'Open Sans', sans-serif" fontSize="20px" m="0.25rem 0" fontWeight="300" color="rgb(2, 2, 2)" textAlign="left">
                               {selectedTool.title}
                             </Heading>
                             <Image
@@ -703,16 +702,16 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                           </HStack>
 
                           {/* Tags row */}
-                          <HStack className="detail-tags-row" spacing="0.5rem" flexWrap="wrap" mt="0.25rem">
+                          <HStack className="detail-tags-row" spacing="0.5rem" flexWrap="wrap" m="0.75rem 0">
                             {selectedTool.categories && selectedTool.categories.length > 0 && (
                               <>
                                 <Box
                                   className="tag-category"
                                   as="span"
-                                  fontSize="0.75rem"
-                                  fontFamily="Open Sans,sans-serif"
+                                  fontSize="12px"
+                                  fontFamily="'Open Sans', sans-serif"
                                   fontWeight="300"
-                                  color="var(--neutral--900)"
+                                  color="rgb(15, 15, 15)"
                                   bg="var(--blue-050, #edf0f7)"
                                   borderRadius="1rem"
                                   px="10px"
@@ -725,10 +724,10 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                                     className="tag-item"
                                     key={`${tag}-${idx}`}
                                     as="span"
-                                    fontSize="0.75rem"
-                                    fontFamily="Open Sans,sans-serif"
+                                    fontSize="12px"
+                                    fontFamily="'Open Sans', sans-serif"
                                     fontWeight="300"
-                                    color="var(--neutral--900)"
+                                    color="rgb(15, 15, 15)"
                                     bg="var(--green-050, #f0f8f4)"
                                     borderRadius="1rem"
                                     px="10px"
@@ -744,25 +743,26 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                           {/* Details grid */}
                           <Grid className="detail-grid" templateColumns="max-content 1fr" rowGap="0.5rem" columnGap="1rem" mt="1rem">
                             <Text className="field-label"
-                              fontFamily="Open Sans,sans-serif"
+                              fontFamily="'Open Sans', sans-serif"
                               fontWeight="300"
-                              color="var(--sand--400, #d3a873)"
+                              fontSize="14.4px"
+                              color="rgb(179, 123, 56)"
                             >
                               Provider
                             </Text>
-                            <Text className="tool-provider" m="0" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--neutral--900)">
+                            <Text className="tool-provider" m="0" fontFamily="'Open Sans', sans-serif" fontWeight="300" fontSize="16px" lineHeight="1.4" color="rgb(41, 41, 41)">
                               {selectedTool.provider}
                             </Text>
 
-                            <Text className="field-label" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--sand--400, #d3a873)">
+                            <Text className="field-label" fontFamily="'Open Sans', sans-serif" fontWeight="300" fontSize="14.4px" color="rgb(179, 123, 56)">
                               Description
                             </Text>
-                            <Box className="long-desc" dangerouslySetInnerHTML={{ __html: selectedTool.longDesc }} fontSize="1.15rem" lineHeight="1.4em" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--neutral--900)" mb="1rem" />
+                            <Box className="long-desc" dangerouslySetInnerHTML={{ __html: selectedTool.longDesc }} fontSize="16px" lineHeight="1.4" fontFamily="'Open Sans', sans-serif" fontWeight="300" color="rgb(41, 41, 41)" mb="1rem" />
 
-                            <Text className="field-label" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--sand--400, #d3a873)">
+                            <Text className="field-label" fontFamily="'Open Sans', sans-serif" fontWeight="300" fontSize="14.4px" color="rgb(179, 123, 56)">
                               Actions ({selectedToolActions.length})
                             </Text>
-                            <Box className="actions-list" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--neutral--900)">
+                            <Box className="actions-list" fontFamily="'Open Sans', sans-serif" fontWeight="300" fontSize="16px" lineHeight="1.4" color="rgb(41, 41, 41)">
                               {renderActionsList()}
                             </Box>
                           </Grid>
