@@ -481,7 +481,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
               </VStack>
 
               {/* Search */}
-              <Box display="flex" justifyContent="center" flexShrink={0} mt="0.75rem" mb="1.75rem">
+              <Box display="flex" justifyContent="center" flexShrink={0}>
                 <Input
                   id="catalog-search"
                   placeholder="Search by name, description, category, tags, actions…"
@@ -489,16 +489,18 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                   onChange={(e) => setSearchQuery(e.target.value)}
                   maxW="500px"
                   w="100%"
-                  h="44px"
-                  p="0.9rem 1.25rem"
+                  p="0.75rem 1.25rem"
                   m="0.75rem auto 2rem"
                   fontSize="1rem"
-                  fontFamily="Open Sans,sans-serif"
-                  fontWeight="100"
+                  fontFamily="'Open Sans', sans-serif"
+                  fontWeight="300"
+                  color="rgb(2, 2, 2)"
                   border="1px solid"
                   borderColor="var(--sand-200, #e9d4b9)"
-                  borderRadius="9999px"
-                  bg="#ffffff"
+                  borderRadius="1.5rem"
+                  bg="rgb(255, 255, 255)"
+                  boxSizing="border-box"
+                  transition="border 0.2s ease"
                   _placeholder={{ color: 'var(--sand-400, #d3a873)' }}
                   _focus={{
                     outline: 'none',
