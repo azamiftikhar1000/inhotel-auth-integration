@@ -463,7 +463,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                   display="block"
                   boxSizing="border-box"
                 >
-                  Add a Tool
+                  Connect a Tool
                 </Heading>
                 <Text
                   as="p"
@@ -659,15 +659,16 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                     <Box
                       id="catalog-details-panel"
                       className="details-panel"
-                      bg="#ffffff"
+                      bg="var(--sand-040, #fdfaf7)"
                       border="1px solid"
-                      borderColor={colorMode === 'light' ? '#e7e5e4' : '#374151'}
+                      borderColor="var(--sand-100, #f4e9dc)"
                       borderRadius="0.25rem"
                       p="16px"
                       overflowY="auto"
                       display="flex"
                       flexDirection="column"
                       h="100%"
+                      boxSizing="border-box"
                     >
                       {!selectedTool ? (
                         <Image
@@ -839,7 +840,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
               }}
               isDisabled={!selectedTool || !isToolConnectable(selectedTool || ({} as any))}
             >
-              Add
+              Connect
             </Button>
           </ModalFooter>
         </ModalContent>
