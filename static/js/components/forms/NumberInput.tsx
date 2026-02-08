@@ -45,6 +45,7 @@ export const FormNumberInput = ({
         <NumberInputField
           placeholder={placeholder ?? ''}
           {...register(name, rules)}
+          fontSize="1.25rem"
           bg="#ffffff"
           border="1px solid"
           borderColor="var(--sand-200, #e9d4b9)"
@@ -56,7 +57,7 @@ export const FormNumberInput = ({
             boxShadow: "none",
           }}
         />
-          {/* <NumberInputStepper>
+        {/* <NumberInputStepper>
             <NumberIncrementStepper />
             <NumberDecrementStepper />
           </NumberInputStepper> */}

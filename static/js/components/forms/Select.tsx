@@ -6,7 +6,7 @@ interface SelectProps {
   label: string;
   name: string;
   rules: Rules;
-  errors:FieldErrors<FieldValues>;
+  errors: FieldErrors<FieldValues>;
   register: UseFormRegister<FieldValues>;
   hidden?: boolean;
   options: {
@@ -32,6 +32,7 @@ export const FormSelect = ({
       </FormLabel>
       <Select
         {...register(name, rules)}
+        fontSize="1.25rem"
         bg="#ffffff"
         border="1px solid"
         borderColor="var(--sand-200, #e9d4b9)"
