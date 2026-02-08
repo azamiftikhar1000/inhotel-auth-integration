@@ -23,6 +23,7 @@ import { Tool, ToolAction, APIResponse, KnowledgeAPIResponse, ActionAPIResponse,
 import { ConnectionPlatform } from '../types/link';
 import useGlobal from '../logic/hooks/useGlobal';
 import '../index.css';
+import './ToolCatalogModal.css';
 
 export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
   isOpen,
@@ -164,18 +165,84 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
       throw new Error('Unexpected response');
     } catch (err) {
       console.warn('API fetch failed; using fallback.', err);
-      return [{
-        id: '1',
-        name: 'sample-tool',
-        title: 'Sample Tool',
-        shortDesc: 'Sample fallback tool description.',
-        provider: 'Sample',
-        longDesc: '<p>Sample fallback tool description.</p>',
-        categories: ['Misc'],
-        logo: '',
-        learnMore: '#'
-      }];
+      return [];
     }
+    //   return [
+    //     {
+    //       id: '1',
+    //       name: 'apaleo-staff',
+    //       title: 'Apaleo Staff',
+    //       shortDesc: 'Apaleo PMS for all staff',
+    //       longDesc: '<p>Apaleo PMS for all staff</p>',
+    //       provider: 'Apaleo',
+    //       categories: ['travel', 'pms'],
+    //       logo: 'https://ui-avatars.com/api/?name=Ap&background=000&color=fff&size=64',
+    //       learnMore: '#',
+    //       actions: [{ title: 'Get Reservations' }, { title: 'Update Booking' }, { title: 'Check Availability' }]
+    //     },
+    //     {
+    //       id: '2',
+    //       name: 'linksrez',
+    //       title: 'Linksrez',
+    //       shortDesc: 'Unified API tool with full PMS, RMS, and hotel intelligence for high-margin direct bookings',
+    //       longDesc: '<p>Unified API tool with full PMS, RMS, and hotel intelligence for high-margin direct bookings</p>',
+    //       provider: 'LinksRez',
+    //       categories: ['travel', 'booking'],
+    //       logo: 'https://ui-avatars.com/api/?name=Li&background=fff&color=000&size=64&bold=true',
+    //       learnMore: '#',
+    //       actions: [{ title: 'Create Booking' }, { title: 'Get Rates' }, { title: 'Update Inventory' }]
+    //     },
+    //     {
+    //       id: '3',
+    //       name: 'apaleo-revenue',
+    //       title: 'Apaleo Revenue',
+    //       shortDesc: 'Apaleo PMS for Revenue teams',
+    //       longDesc: '<p>Apaleo PMS for Revenue teams</p>',
+    //       provider: 'Apaleo',
+    //       categories: ['finance', 'revenue'],
+    //       logo: 'https://ui-avatars.com/api/?name=AR&background=000&color=fff&size=64',
+    //       learnMore: '#',
+    //       actions: [{ title: 'Revenue Reports' }, { title: 'Pricing Strategy' }, { title: 'Forecast Analysis' }]
+    //     },
+    //     {
+    //       id: '4',
+    //       name: 'openuv',
+    //       title: 'Real-time UV Index API',
+    //       shortDesc: 'Provides the current UV Index and 5 day Hourly UV Index Forecast.',
+    //       longDesc: '<p>Provides the current UV Index and 5 day Hourly UV Index Forecast.</p>',
+    //       provider: 'OpenUV',
+    //       categories: ['weather', 'data'],
+    //       logo: 'https://ui-avatars.com/api/?name=UV&background=fff&color=000&size=64',
+    //       learnMore: '#',
+    //       actions: [{ title: 'Get UV Index' }, { title: 'Get Forecast' }]
+    //     },
+    //     {
+    //       id: '5',
+    //       name: 'leadspicker',
+    //       title: 'Leadspicker API',
+    //       shortDesc: 'Lead generation automation.',
+    //       longDesc: '<p>Lead generation automation.</p>',
+    //       provider: 'Leadspicker',
+    //       categories: ['sales', 'marketing'],
+    //       logo: 'https://ui-avatars.com/api/?name=Lp&background=3b82f6&color=fff&size=64',
+    //       learnMore: '#',
+    //       actions: [{ title: 'Generate Leads' }, { title: 'Export Contacts' }, { title: 'Track Campaigns' }]
+    //     },
+    //     {
+    //       id: '6',
+    //       name: 'stripe',
+    //       title: 'Stripe Payments',
+    //       shortDesc: 'Payment processing and financial infrastructure',
+    //       longDesc: '<p>Complete payment processing solution with support for multiple currencies and payment methods.</p>',
+    //       provider: 'Stripe',
+    //       categories: ['finance', 'payments'],
+    //       logo: 'https://ui-avatars.com/api/?name=St&background=635bff&color=fff&size=64',
+    //       learnMore: '#',
+    //       actions: [{ title: 'Process Payment' }, { title: 'Create Invoice' }, { title: 'Manage Subscriptions' }, { title: 'Refund Transaction' }]
+    //     }
+    //   ];
+    // }
+
   };
 
   // Fetch actions for specific tool
@@ -390,24 +457,22 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
     }
 
     return (
-      <Box>
+      <>
         {selectedToolActions.map((action, index) => (
           <Box
             key={index}
-            fontSize="1rem"
-            color={colorMode === 'light' ? '#262626' : '#d1d5db'}
-            lineHeight="1.2"
+            className="tool-provider"
             dangerouslySetInnerHTML={{ __html: action.title }}
           />
         ))}
-      </Box>
+      </>
     );
   };
 
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} size="6xl" closeOnOverlayClick={false} isCentered>
-        <ModalOverlay bg="rgba(0,0,0,0.4)" backdropFilter="blur(8px)" />
+        <ModalOverlay bg="rgba(0,0,0,0.4)" backdropFilter="blur(6px)" />
         <ModalContent
           w="90vw"
           h="80vh"
@@ -422,11 +487,18 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
           display="flex"
           flexDirection="column"
           position="relative"
+          fontFamily="'Montserrat', sans-serif"
+          color="rgb(15, 15, 15)"
+          fontSize="1rem"
+          fontWeight="400"
+          lineHeight="1.5"
         >
           <ModalCloseButton
             className="close-modal"
             aria-label="Close modal"
-            fontSize="24px"
+            fontSize="20px"
+            fontWeight="300"
+            fontFamily="'Open Sans', sans-serif"
             w="32px"
             h="32px"
             color="rgb(161, 211, 186)"
@@ -442,74 +514,46 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
             boxShadow="none"
             cursor="pointer"
             transition="background 0.2s"
-            _focus={{ boxShadow: 'none' }}
+            _focus={{ boxShadow: 'none', outline: 'none' }}
             _hover={{ color: 'var(--green-400, #82c4a3)', bg: 'var(--sand-100, #f4e9dc)', borderRadius: '50%' }}
           />
 
-          <ModalBody p="0" display="flex" flexDirection="column" overflow="hidden" h="100%">
+          {/* Title - outside modal body like reference HTML */}
+          <Heading
+            as="h4"
+            id="portal-modal-title"
+            className="portal-h4"
+            color="rgb(15, 15, 15)"
+            m="8px 0"
+            fontFamily="Montserrat, sans-serif"
+            fontSize="20.8px"
+            lineHeight="25.4176px"
+            fontWeight="400"
+            display="block"
+            boxSizing="border-box"
+          >
+            Connect a Tool
+          </Heading>
+
+          <ModalBody className="modal-body" p="0" m="1rem 0" display="flex" flexDirection="column" overflow="hidden" h="100%" flex="1">
             <VStack spacing="0" align="stretch" h="100%" minH="0">
-              {/* Header */}
-              <VStack spacing="0" align="start" flexShrink={0}>
-                <Heading
-                  as="h4"
-                  id="portal-modal-title"
-                  className="portal-h4"
-                  color="rgb(15, 15, 15)"
-                  m="8px 0"
-                  fontFamily="Montserrat, sans-serif"
-                  fontSize="20.8px"
-                  lineHeight="25.4176px"
-                  fontWeight="400"
-                  display="block"
-                  boxSizing="border-box"
-                >
-                  Connect a Tool
-                </Heading>
-                <Text
-                  as="p"
-                  className="modal-subtitle"
-                  color="rgb(15, 15, 15)"
-                  m="0 0 16px 0"
-                  fontFamily="'Open Sans', sans-serif"
-                  lineHeight="1.5"
-                  fontSize="18px"
-                  fontWeight="300"
-                  boxSizing="border-box"
-                >
-                  Select systems and tools you wish to make available for the AI assistants in your organization.
-                </Text>
-              </VStack>
+              {/* Subtitle - inside modal body like reference HTML */}
+              <Text
+                as="p"
+                className="modal-subtitle"
+                flexShrink={0}
+              >
+                Select systems and tools you wish to make available for the AI assistants in your organization.
+              </Text>
 
               {/* Search */}
-              <Box display="flex" justifyContent="center" flexShrink={0}>
-                <Input
-                  id="catalog-search"
-                  placeholder="Search by name, description, category, tags, actions…"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  maxW="500px"
-                  w="100%"
-                  p="0.75rem 1.25rem"
-                  m="0.75rem auto 2rem"
-                  fontSize="1rem"
-                  fontFamily="'Open Sans', sans-serif"
-                  fontWeight="300"
-                  color="rgb(2, 2, 2)"
-                  border="1px solid"
-                  borderColor="var(--sand-200, #e9d4b9)"
-                  borderRadius="1.5rem"
-                  bg="rgb(255, 255, 255)"
-                  boxSizing="border-box"
-                  transition="border 0.2s ease"
-                  _placeholder={{ color: 'var(--sand-400, #d3a873)' }}
-                  _focus={{
-                    outline: 'none',
-                    border: '1px solid',
-                    borderColor: 'var(--green-300, #a1d3ba)',
-                    boxShadow: 'none'
-                  }}
-                />
-              </Box>
+              <input
+                id="catalog-search"
+                type="text"
+                placeholder="Search by name, description, category, tags, actions…"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
 
               {lookupError && (
                 <Box
@@ -530,14 +574,27 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                   <Spinner thickness="3px" speed="0.6s" emptyColor="gray.200" color="#a1d3ba" size="lg" />
                 </Box>
               ) : (
-                <HStack spacing="0" flex="1" minH="0" align="stretch">
-                  {/* Tools Grid - Fixed Width */}
+                <Grid
+                  className="catalog-layout"
+                  templateColumns="1fr 1fr"
+                  gap="1rem"
+                  flex="1 1 auto"
+                  h="100%"
+                  minH="0"
+                  minW="0"
+                  overflow="hidden"
+                >
+                  {/* Tools Grid */}
                   <Box
-                    w="50%"
-                    minW="50%"
-                    maxW="50%"
-                    overflow="hidden"
-                    flexShrink={0}
+                    className="card-grid-wrapper"
+                    h="100%"
+                    minH="0"
+                    minW="0"
+                    maxH="100%"
+                    maxW="100%"
+                    overflowY="auto"
+                    overflowX="hidden"
+                    pr=".5rem"
                   >
                     <Box
                       id="catalog-card-grid"
@@ -545,21 +602,6 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                       display="grid"
                       rowGap=".5rem"
                       alignContent="start"
-                      pr=".5rem"
-                      h="100%"
-                      overflowY="auto"
-                      css={{
-                        '&::-webkit-scrollbar': {
-                          width: '6px',
-                        },
-                        '&::-webkit-scrollbar-track': {
-                          background: 'transparent',
-                        },
-                        '&::-webkit-scrollbar-thumb': {
-                          background: '#d1d5db',
-                          borderRadius: '3px',
-                        },
-                      }}
                     >
                       {filteredTools.map((tool) => (
                         <Box
@@ -584,7 +626,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                           }}
                           onClick={() => handleToolSelect(tool)}
                         >
-                          <HStack className="card-header" spacing="0.75rem" mb="0">
+                          <HStack className="card-header" gap="0.75rem" mb="0">
                             <Image
                               className="card-logo"
                               src={tool.logo}
@@ -649,135 +691,99 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                     </Box>
                   </Box>
 
-                  {/* Details Panel - Fixed Width */}
+                  {/* Details Panel */}
                   <Box
-                    w="50%"
-                    minW="50%"
-                    maxW="50%"
-                    flexShrink={0}
+                    id="catalog-details-panel"
+                    className="details-panel"
+                    bg={selectedTool ? '#fff' : 'var(--sand-040, #fdfaf7)'}
+                    border="1px solid"
+                    borderColor="var(--sand-100, #f4e9dc)"
+                    borderRadius="0.25rem"
+                    p="16px"
+                    h="100%"
+                    minH="0"
+                    minW="0"
+                    maxH="100%"
+                    maxW="100%"
+                    overflowY="auto"
+                    overflowX="hidden"
+                    display="flex"
+                    flexDirection="column"
+                    boxSizing="border-box"
                   >
-                    <Box
-                      id="catalog-details-panel"
-                      className="details-panel"
-                      bg={selectedTool ? '#fff' : 'var(--sand-040, #fdfaf7)'}
-                      border="1px solid"
-                      borderColor="var(--sand-100, #f4e9dc)"
-                      borderRadius="0.25rem"
-                      p="16px"
-                      overflowY="auto"
-                      display="flex"
-                      flexDirection="column"
-                      h="100%"
-                      boxSizing="border-box"
-                    >
-                      {!selectedTool ? (
-                        <Image
-                          className="empty-state"
-                          src="https://cdn.prod.website-files.com/657ae60d92ed823479730a3f/67f93be4b1e4cf832343dce6_inhotel-pineapple-sand-060.svg"
-                          alt="Pineapple background image"
-                          m="auto"
-                          maxH="80%"
-                          maxW="80%"
-                          w="auto"
-                          h="auto"
-                          fontFamily="Open Sans,sans-serif"
-                          fontWeight="300"
-                          lineHeight="1.667rem"
-                          display="inline-block"
-                          overflow="clip"
-                          overflow-clip-margin="content-box"
-                        />
-                      ) : (
-                        <VStack spacing="1rem" align="stretch" h="100%">
-                          {/* Header: name left, logo right */}
-                          <HStack className="details-top" justify="space-between" align="flex-start" mb="0">
-                            <Heading className="tool-name" as="h5" fontFamily="'Open Sans', sans-serif" fontSize="20px" m="0.25rem 0" fontWeight="300" color="rgb(2, 2, 2)" textAlign="left">
-                              {selectedTool.title}
-                            </Heading>
-                            <Image
-                              className="detail-logo"
-                              src={selectedTool.logo}
-                              w="64px"
-                              h="64px"
-                              objectFit="contain"
-                              alt={selectedTool.title}
-                            />
-                          </HStack>
+                    {!selectedTool ? (
+                      <Image
+                        className="empty-state"
+                        src="https://cdn.prod.website-files.com/657ae60d92ed823479730a3f/67f93be4b1e4cf832343dce6_inhotel-pineapple-sand-060.svg"
+                        alt="Pineapple background image"
+                        m="auto"
+                        maxH="80%"
+                        maxW="80%"
+                        w="auto"
+                        h="auto"
+                        fontFamily="Open Sans,sans-serif"
+                        fontWeight="300"
+                        lineHeight="1.667rem"
+                        display="inline-block"
+                        overflow="clip"
+                        overflow-clip-margin="content-box"
+                      />
+                    ) : (
+                      <Box display="flex" flexDirection="column" h="100%">
+                        {/* Header: name left, logo right */}
+                        <Box className="details-top">
+                          <Box className="tool-name" as="h5">
+                            {selectedTool.title}
+                          </Box>
+                          <Image
+                            className="detail-logo"
+                            src={selectedTool.logo}
+                            alt={selectedTool.title}
+                          />
+                        </Box>
 
-                          {/* Tags row */}
-                          <HStack className="detail-tags-row" spacing="0.5rem" flexWrap="wrap" m="0.75rem 0">
-                            {selectedTool.categories && selectedTool.categories.length > 0 && (
-                              <>
-                                <Box
-                                  className="tag-category"
-                                  as="span"
-                                  fontSize="12px"
-                                  fontFamily="'Open Sans', sans-serif"
-                                  fontWeight="300"
-                                  color="rgb(15, 15, 15)"
-                                  bg="var(--blue-050, #edf0f7)"
-                                  borderRadius="1rem"
-                                  px="10px"
-                                  py="2px"
-                                >
-                                  {selectedTool.categories[0]}
+                        {/* Tags row */}
+                        <Box className="detail-tags-row">
+                          {selectedTool.categories && selectedTool.categories.length > 0 && (
+                            <>
+                              <Box className="tag-category" as="span">
+                                {selectedTool.categories[0]}
+                              </Box>
+                              {selectedTool.categories.slice(1).map((tag, idx) => (
+                                <Box className="tag-item" key={`${tag}-${idx}`} as="span">
+                                  {tag}
                                 </Box>
-                                {selectedTool.categories.slice(1).map((tag, idx) => (
-                                  <Box
-                                    className="tag-item"
-                                    key={`${tag}-${idx}`}
-                                    as="span"
-                                    fontSize="12px"
-                                    fontFamily="'Open Sans', sans-serif"
-                                    fontWeight="300"
-                                    color="rgb(15, 15, 15)"
-                                    bg="var(--green-050, #f0f8f4)"
-                                    borderRadius="1rem"
-                                    px="10px"
-                                    py="2px"
-                                  >
-                                    {tag}
-                                  </Box>
-                                ))}
-                              </>
-                            )}
-                          </HStack>
+                              ))}
+                            </>
+                          )}
+                        </Box>
 
-                          {/* Details grid */}
-                          <Grid className="detail-grid" templateColumns="max-content 1fr" rowGap="0.5rem" columnGap="1rem" mt="1rem">
-                            <Text className="field-label"
-                              fontFamily="'Open Sans', sans-serif"
-                              fontWeight="300"
-                              fontSize="14.4px"
-                              color="rgb(179, 123, 56)"
-                            >
-                              Provider
-                            </Text>
-                            <Text className="tool-provider" m="0" fontFamily="'Open Sans', sans-serif" fontWeight="300" fontSize="16px" lineHeight="1.4" color="rgb(41, 41, 41)">
-                              {selectedTool.provider}
-                            </Text>
+                        {/* Details grid */}
+                        <Box className="detail-grid">
+                          <Box className="field-label">Provider</Box>
+                          <Box className="tool-provider field-value">
+                            {selectedTool.provider}
+                          </Box>
 
-                            <Text className="field-label" fontFamily="'Open Sans', sans-serif" fontWeight="300" fontSize="14.4px" color="rgb(179, 123, 56)">
-                              Description
-                            </Text>
-                            <Box className="long-desc" dangerouslySetInnerHTML={{ __html: selectedTool.longDesc }} fontSize="16px" lineHeight="1.4" fontFamily="'Open Sans', sans-serif" fontWeight="300" color="rgb(41, 41, 41)" mb="1rem" />
+                          <Box className="field-label">Description</Box>
+                          <Box
+                            className="long-desc field-value"
+                            dangerouslySetInnerHTML={{ __html: selectedTool.longDesc }}
+                          />
 
-                            <Text className="field-label" fontFamily="'Open Sans', sans-serif" fontWeight="300" fontSize="14.4px" color="rgb(179, 123, 56)">
-                              Actions ({selectedToolActions.length})
-                            </Text>
-                            <Box className="actions-list" fontFamily="'Open Sans', sans-serif" fontWeight="300" fontSize="16px" lineHeight="1.4" color="rgb(41, 41, 41)">
-                              {renderActionsList()}
-                            </Box>
-                          </Grid>
-                        </VStack>
-                      )}
-                    </Box>
+                          <Box className="field-label">Actions ({selectedToolActions.length})</Box>
+                          <Box className="actions-list field-value">
+                            {renderActionsList()}
+                          </Box>
+                        </Box>
+                      </Box>
+                    )}
                   </Box>
-                </HStack>
+                </Grid>
               )}
             </VStack>
           </ModalBody>
-          <ModalFooter p="0" mt="1rem" display="flex" gap="0.5rem">
+          <ModalFooter className="button-row" p="0" mt="1rem" display="flex" gap="1rem" justifyContent="flex-end">
             <Button
               className="button sand-green slim"
               display="flex"
@@ -829,9 +835,14 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
               transition="all 0.2s"
               _hover={selectedTool && isToolConnectable(selectedTool) ? {
                 bg: 'rgb(161, 211, 186)',
+                borderColor: 'rgb(161, 211, 186)',
                 color: 'rgb(15, 15, 15)',
                 transform: 'translateY(-3px)',
               } : {}}
+              _disabled={{
+                opacity: 0.5,
+                cursor: 'not-allowed',
+              }}
               pointerEvents="auto"
               onClick={() => {
                 if (selectedTool && isToolConnectable(selectedTool)) {
@@ -844,7 +855,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
             </Button>
           </ModalFooter>
         </ModalContent>
-      </Modal>
+      </Modal >
     </>
   );
 }; 
