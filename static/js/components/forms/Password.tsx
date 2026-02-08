@@ -36,7 +36,15 @@ export const FormPassword = ({
 
   return (
     <FormControl isInvalid={!!errors[name]}>
-      <FormLabel fontSize="lg" fontWeight="bold">{label}</FormLabel>
+      <FormLabel
+        fontSize="14.4px"
+        fontWeight="300"
+        fontFamily="'Open Sans', sans-serif"
+        color="rgb(179, 123, 56)"
+        mb="1"
+      >
+        {label}
+      </FormLabel>
       <InputGroup>
         <Input
           type={show ? "text" : "password"}

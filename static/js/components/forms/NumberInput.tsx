@@ -38,7 +38,13 @@ export const FormNumberInput = ({
 }: NumberInputProps) => {
   return (
     <FormControl isInvalid={!!errors[name]}>
-      <FormLabel fontSize="lg" fontWeight="bold">
+      <FormLabel
+        fontSize="14.4px"
+        fontWeight="300"
+        fontFamily="'Open Sans', sans-serif"
+        color="rgb(179, 123, 56)"
+        mb="1"
+      >
         {label}
       </FormLabel>
       <NumberInput min={min} max={max} step={step} defaultValue={value}>
