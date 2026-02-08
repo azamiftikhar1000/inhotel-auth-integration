@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Add Tool Modal - Complete Working Example</title>
+
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="anonymous" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Exo:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    /* ========== CSS VARIABLES ========== */
+    :root {
+      --sand-020: #fefdfb;
+      --sand-040: #fdfaf7;
+      --sand-060: #f9f3ec;
+      --sand-100: #f4e9dc;
+      --sand-200: #e9d4b9;
+      --sand-400: #d3a873;
+      --sand-600: #b37b38;
+      --sand-700: #885e2b;
+
+      --green-050: #f0f8f4;
+      --green-200: #c1e2d1;
+      --green-300: #a1d3ba;
+      --green-400: #82c4a3;
+      --green-600: #4ca177;
+
+      --blue-050: #edf0f7;
+
+      --neutral--000: #ffffff;
+      --neutral--800: #292929;
+      --neutral--900: #0f0f0f;
+      --neutral--950: #020202;
+
+      --overlay-bg: rgba(0, 0, 0, 0.4);
+    }
+
+    /* ========== RESET ========== */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 300;
+      margin: 0;
+      background-color: var(--sand-060);
+      color: var(--neutral--950);
+      min-height: 100vh;
+      padding: 2rem;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-weight: 300;
+      font-family: 'Exo', sans-serif;
+    }
+
+    /* ========== PAGE STYLES ========== */
+    .page-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin-bottom: 2rem;
+      color: var(--neutral--950);
+      font-family: 'Exo', sans-serif;
+      font-weight: 300;
+    }
+
+    .button.sand-green {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background-color: var(--sand-200);
+      color: var(--neutral--900);
+      border: 1px solid var(--sand-200);
+      border-radius: 2rem;
+      font-size: 1.125rem;
+      font-weight: 300;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .button.sand-green:hover {
+      background-color: var(--sand-400);
+      border-color: var(--sand-400);
+    }
+
+    .button.sand-green img {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ========== MODAL STYLES ========== */
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--overlay-bg, rgba(0, 0, 0, 0.4));
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+    }
+
+    .modal.hidden {
+      display: none;
+    }
+
+    .modal-content {
+      position: relative;
+      background: var(--sand-060);
+      border: 2px solid var(--green-300);
+      border-radius: 1.25rem;
+      padding: 1.5rem;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      width: 80vw;
+      max-width: 90vw;
+      font-family: 'Montserrat', sans-serif;
+      color: rgb(15, 15, 15);
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .modal-content.modal-size-small {
+      width: 400px;
+      height: auto;
+    }
+
+    .modal-content.modal-size-medium {
+      width: 60vw;
+      height: auto;
+    }
+
+    .modal-content.modal-size-large {
+      width: 90vw;
+      height: 80vh;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 48px;
+      font-weight: 300;
+      font-family: 'Open Sans', sans-serif;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      color: rgb(161, 211, 186);
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: none;
+    }
+
+    .close-modal:hover {
+      color: var(--green-400);
+      background: var(--sand-100);
+      border-radius: 50%;
+    }
+
+    .portal-h4 {
+      margin: 8px 0;
+      color: rgb(15, 15, 15);
+      font-size: 20.8px;
+      font-weight: 400;
+      line-height: 25.4176px;
+      font-family: 'Montserrat', sans-serif;
+      box-sizing: border-box;
+      display: block;
+    }
+
+    .modal-body {
+      flex: 1;
+      margin: 1rem 0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .modal-subtitle {
+      margin: 0 0 16px;
+      color: rgb(15, 15, 15);
+      font-size: 18px;
+      font-weight: 300;
+      line-height: 1.5;
+      font-family: 'Open Sans', sans-serif;
+      box-sizing: border-box;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .button.slim {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 24px;
+      border-radius: 20px;
+      font-weight: 300;
+      cursor: pointer;
+      border: 1px solid transparent;
+      font-size: 18px;
+      font-family: 'Montserrat', sans-serif;
+      line-height: 19.998px;
+      height: 38px;
+      box-shadow: rgba(20, 20, 43, 0.06) 0px 4px 10px 0px;
+      box-sizing: border-box;
+      transition: all 0.2s;
+    }
+
+    .button.sand-green.slim {
+      background-color: rgb(244, 233, 220);
+      color: rgb(15, 15, 15);
+      border: 1px solid rgb(233, 212, 185);
+    }
+
+    .button.sand-green.slim:hover {
+      background-color: rgb(161, 211, 186);
+      border-color: rgb(161, 211, 186);
+      transform: translateY(-3px);
+    }
+
+    .button.white-green.slim {
+      background-color: rgb(255, 255, 255);
+      color: rgb(15, 15, 15);
+      border: 1px solid rgb(191, 191, 191);
+    }
+
+    .button.white-green.slim:hover {
+      background-color: rgb(161, 211, 186);
+      color: rgb(15, 15, 15);
+      transform: translateY(-3px);
+    }
+
+    .button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* ========== CATALOG STYLES ========== */
+    .catalog-wrapper {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    #catalog-search {
+      width: 100%;
+      max-width: 500px;
+      display: block;
+      margin: .75rem auto 2rem;
+      padding: .75rem 1.25rem;
+      font-size: 1rem;
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 300;
+      color: rgb(2, 2, 2);
+      background-color: rgb(255, 255, 255);
+      border: 1px solid var(--sand-200);
+      border-radius: 1.5rem;
+      box-sizing: border-box;
+      transition: border 0.2s ease;
+    }
+
+    #catalog-search::placeholder {
+      color: var(--sand-400);
+    }
+
+    #catalog-search:focus {
+      outline: none;
+      border: 1px solid var(--green-300);
+    }
+
+    .catalog-layout {
+      flex: 1 1 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      height: 100%;
+      min-height: 0;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .card-grid,
+    .details-panel {
+      height: 100%;
+      min-height: 0;
+      min-width: 0;
+      max-height: 100%;
+      max-width: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .card-grid {
+      display: grid;
+      row-gap: .5rem;
+      align-content: start;
+      padding-right: .5rem;
+    }
+
+    .card {
+      background: rgb(253, 250, 247);
+      border: 1px solid rgb(244, 233, 220);
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      transition: .2s;
+      min-height: 88px;
+      max-height: 140px;
+      overflow: hidden;
+      box-shadow: rgba(20, 20, 43, 0.06) 0px 2px 7px 0px;
+    }
+
+    .card:hover {
+      background: rgb(254, 253, 251);
+      box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 8px 0px;
+      border-color: rgb(161, 211, 186);
+    }
+
+    .card.active {
+      background: rgb(255, 255, 255);
+      border-color: rgb(244, 233, 220);
+    }
+
+    .card.active:hover {
+      border-color: rgb(161, 211, 186);
+    }
+
+    .card-header {
+      display: flex;
+      gap: .75rem;
+    }
+
+    .card-logo {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+    }
+
+    .card-title {
+      display: flex;
+      flex-direction: column;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 300;
+      color: rgb(2, 2, 2);
+      line-height: 24px;
+      height: 64px;
+      cursor: pointer;
+      box-sizing: border-box;
+    }
+
+    .card-name {
+      font-size: 16px;
+      font-weight: 400;
+      color: rgb(2, 2, 2);
+      font-family: 'Open Sans', sans-serif;
+      display: block;
+      line-height: 24px;
+      margin: 0 0 2px 0;
+      padding-left: 0;
+      padding-right: 21px;
+      cursor: pointer;
+      box-sizing: border-box;
+    }
+
+    .card-desc {
+      font-size: 14.4px;
+      font-weight: 300;
+      color: rgb(41, 41, 41);
+      font-family: 'Open Sans', sans-serif;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow-x: hidden;
+      overflow-y: hidden;
+      text-overflow: ellipsis;
+      line-height: 15.84px;
+      cursor: pointer;
+      box-sizing: border-box;
+    }
+
+    .details-panel {
+      background: var(--sand-040);
+      border: 1px solid var(--sand-100);
+      border-radius: .25rem;
+      padding: 16px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .details-panel .empty-state {
+      margin: auto;
+      max-height: 80%;
+      max-width: 80%;
+    }
+
+    .details-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0;
+    }
+
+    .details-top .detail-logo {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+    }
+
+    .tool-name {
+      font-size: 20px;
+      font-weight: 300;
+      text-align: left;
+      margin: .25rem 0;
+      font-family: 'Open Sans', sans-serif;
+      color: rgb(2, 2, 2);
+    }
+
+    .detail-tags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin: .75rem 0;
+    }
+
+    .tag-category {
+      font-size: 12px;
+      color: rgb(15, 15, 15);
+      background: var(--blue-050);
+      border-radius: 1rem;
+      padding: 2px 10px;
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 300;
+    }
+
+    .tag-item {
+      font-size: 12px;
+      color: rgb(15, 15, 15);
+      background: var(--green-050);
+      border-radius: 1rem;
+      padding: 2px 10px;
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 300;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: minmax(6rem, max-content) 1fr;
+      row-gap: .5rem;
+      column-gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .field-label {
+      font-size: 14.4px;
+      color: rgb(179, 123, 56);
+      font-weight: 300;
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    .tool-provider,
+    .long-desc,
+    .actions-list {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 300;
+      color: rgb(41, 41, 41);
+      line-height: 1.4;
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    .actions-list div {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page-container">
+    <h1>Tools Management</h1>
+
+    <button id="openAddToolBtn" class="button sand-green">
+      <img
+        src="https://cdn.prod.website-files.com/657ae60d92ed823479730a3f/66ab7076b09b7a10bba1da17_c42e53b28c1dce7024e6aca39985f447_icon-integration-natural400-32-2.svg"
+        alt="icon">
+      <div>Add a Tool</div>
+    </button>
+  </div>
+
+  <!-- MODAL STRUCTURE -->
+  <div id="portal-modal" class="modal hidden">
+    <div class="modal-content modal-size-medium">
+      <button class="close-modal" type="button" aria-label="Close modal">&times;</button>
+      <h4 class="portal-h4" id="portal-modal-title">Modal Title</h4>
+      <div class="modal-body" id="portal-modal-body"></div>
+      <div class="button-row" id="portal-modal-buttons">
+        <button type="button" class="button slim" id="portal-modal-cancel">Cancel</button>
+        <button type="button" class="button slim" id="portal-modal-ok">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ========== PORTAL MODAL CLASS ========== */
+    class PortalModal {
+      constructor(modalId) {
+        this.modal = document.getElementById(modalId);
+        this.modalContent = this.modal.querySelector('.modal-content');
+        this.titleEl = this.modal.querySelector('#' + modalId + '-title');
+        this.bodyEl = this.modal.querySelector('#' + modalId + '-body');
+        this.cancelBtn = this.modal.querySelector('#' + modalId + '-cancel');
+        this.okBtn = this.modal.querySelector('#' + modalId + '-ok');
+        this.closeBtn = this.modal.querySelector('.close-modal');
+        this.okHandler = null;
+        this.cancelHandler = null;
+
+        this.cancelBtn.addEventListener('click', () => {
+          if (this.cancelHandler) this.cancelHandler();
+          this.close();
+        });
+
+        this.okBtn.addEventListener('click', () => {
+          if (this.okHandler) this.okHandler();
+        });
+
+        this.closeBtn.addEventListener('click', () => this.close());
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && !this.modal.classList.contains('hidden')) this.close();
+        });
+      }
+
+      open({
+        title = '',
+        content = '',
+        size = 'medium',
+        showButtons = true,
+        okEnabled = true,
+        cancelEnabled = true,
+        okDefault = false,
+        cancelDefault = false,
+        okText = 'OK',
+        cancelText = 'Cancel',
+        onOk,
+        onCancel,
+      }) {
+        this.titleEl.textContent = title;
+        this.bodyEl.innerHTML = '';
+
+        if (typeof content === 'string') {
+          this.bodyEl.innerHTML = content;
+        } else if (content instanceof HTMLElement) {
+          this.bodyEl.appendChild(content);
+        }
+
+        this.okBtn.textContent = okText;
+        this.cancelBtn.textContent = cancelText;
+        this.okBtn.className = `button ${okDefault ? 'white-green' : 'sand-green'} slim`;
+        this.cancelBtn.className = `button ${cancelDefault ? 'white-green' : 'sand-green'} slim`;
+        this.okBtn.style.display = okEnabled ? '' : 'none';
+        this.cancelBtn.style.display = cancelEnabled ? '' : 'none';
+
+        this.modalContent.classList.remove('modal-size-small', 'modal-size-medium', 'modal-size-large');
+        this.modalContent.classList.add(`modal-size-${size}`);
+
+        this.okHandler = onOk || null;
+        this.cancelHandler = onCancel || null;
+
+        document.body.style.overflow = 'hidden';
+        this.modal.classList.remove('hidden');
+
+        const buttonsRow = this.modal.querySelector('.button-row');
+        buttonsRow.style.display = showButtons ? 'flex' : 'none';
+      }
+
+      close() {
+        this.modal.classList.add('hidden');
+        document.body.style.overflow = '';
+        this.bodyEl.innerHTML = '';
+      }
+    }
+
+    // Instantiate portalModal
+    window.portalModal = new PortalModal('portal-modal');
+  </script>
+
+  <script>
+    /* ========== SAMPLE DATA ========== */
+    const TOOLS = [
+      {
+        id: 1,
+        name: 'apaleo-staff',
+        title: 'Apaleo Staff',
+        shortDesc: 'Apaleo PMS for all staff',
+        longDesc: '<p>Apaleo PMS for all staff</p>',
+        provider: 'Apaleo',
+        categories: ['travel', 'pms'],
+        logo: 'https://ui-avatars.com/api/?name=Ap&background=000&color=fff&size=64',
+        actions: ['Get Reservations', 'Update Booking', 'Check Availability']
+      },
+      {
+        id: 2,
+        name: 'linksrez',
+        title: 'Linksrez',
+        shortDesc: 'Unified API tool with full PMS, RMS, and hotel intelligence for high-margin direct bookings',
+        longDesc: '<p>Unified API tool with full PMS, RMS, and hotel intelligence for high-margin direct bookings</p>',
+        provider: 'LinksRez',
+        categories: ['travel', 'booking'],
+        logo: 'https://ui-avatars.com/api/?name=Li&background=fff&color=000&size=64&bold=true',
+        actions: ['Create Booking', 'Get Rates', 'Update Inventory']
+      },
+      {
+        id: 3,
+        name: 'apaleo-revenue',
+        title: 'Apaleo Revenue',
+        shortDesc: 'Apaleo PMS for Revenue teams',
+        longDesc: '<p>Apaleo PMS for Revenue teams</p>',
+        provider: 'Apaleo',
+        categories: ['finance', 'revenue'],
+        logo: 'https://ui-avatars.com/api/?name=AR&background=000&color=fff&size=64',
+        actions: ['Revenue Reports', 'Pricing Strategy', 'Forecast Analysis']
+      },
+      {
+        id: 4,
+        name: 'openuv',
+        title: 'Real-time UV Index API',
+        shortDesc: 'Provides the current UV Index and 5 day Hourly UV Index Forecast.',
+        longDesc: '<p>Provides the current UV Index and 5 day Hourly UV Index Forecast.</p>',
+        provider: 'OpenUV',
+        categories: ['weather', 'data'],
+        logo: 'https://ui-avatars.com/api/?name=UV&background=fff&color=000&size=64',
+        actions: ['Get UV Index', 'Get Forecast']
+      },
+      {
+        id: 5,
+        name: 'leadspicker',
+        title: 'Leadspicker API',
+        shortDesc: 'Lead generation automation.',
+        longDesc: '<p>Lead generation automation.</p>',
+        provider: 'Leadspicker',
+        categories: ['sales', 'marketing'],
+        logo: 'https://ui-avatars.com/api/?name=Lp&background=3b82f6&color=fff&size=64',
+        actions: ['Generate Leads', 'Export Contacts', 'Track Campaigns']
+      },
+      {
+        id: 6,
+        name: 'stripe',
+        title: 'Stripe Payments',
+        shortDesc: 'Payment processing and financial infrastructure',
+        longDesc: '<p>Complete payment processing solution with support for multiple currencies and payment methods.</p>',
+        provider: 'Stripe',
+        categories: ['finance', 'payments'],
+        logo: 'https://ui-avatars.com/api/?name=St&background=635bff&color=fff&size=64',
+        actions: ['Process Payment', 'Create Invoice', 'Manage Subscriptions', 'Refund Transaction']
+      }
+    ];
+
+    /* ========== MODAL LOGIC ========== */
+    async function showAddToolModal() {
+      let selectedTool = null, okBtn = null;
+
+      /* ---------- body ---------- */
+      const wrapper = document.createElement('div');
+      wrapper.className = 'catalog-wrapper';
+
+      const subtitle = document.createElement('p');
+      subtitle.className = 'modal-subtitle';
+      subtitle.textContent = 'Select systems and tools you wish to make available for the AI assistants in your organization.';
+      wrapper.appendChild(subtitle);
+
+      const search = document.createElement('input');
+      search.type = 'text';
+      search.id = 'catalog-search';
+      search.placeholder = 'Search by name, description, category, tags, actions…';
+      wrapper.appendChild(search);
+
+      const catalogLayout = document.createElement('div');
+      catalogLayout.className = 'catalog-layout';
+      wrapper.appendChild(catalogLayout);
+
+      const grid = document.createElement('div');
+      grid.id = 'catalog-card-grid';
+      grid.className = 'card-grid';
+      const details = document.createElement('div');
+      details.id = 'catalog-details-panel';
+      details.className = 'details-panel';
+      catalogLayout.append(grid, details);
+
+      /* ---------- helpers ---------- */
+      const enableOk = f => {
+        if (okBtn) {
+          okBtn.disabled = !f;
+          okBtn.style.pointerEvents = f ? 'auto' : 'none';
+        }
+      };
+
+      const deselect = () => {
+        const prev = grid.querySelector('.card.active');
+        if (prev) prev.classList.remove('active');
+        selectedTool = null;
+        enableOk(false);
+        details.style.background = 'var(--sand-040)';
+        details.innerHTML = `<img class="empty-state"
+           src="https://cdn.prod.website-files.com/657ae60d92ed823479730a3f/67f93be4b1e4cf832343dce6_inhotel-pineapple-sand-060.svg"
+           alt="Pineapple background image">`;
+      };
+
+      const select = (tool, card) => {
+        deselect();
+        card.classList.add('active');
+        selectedTool = tool;
+        enableOk(true);
+        details.style.background = '#fff';
+
+        const cat = `<span class="tag-category">${tool.categories[0] || ''}</span>`;
+        const tags = (tool.categories.slice(1) || []).map(t => `<span class="tag-item">${t}</span>`).join('');
+        const acts = tool.actions.length
+          ? tool.actions.map(a => `<div class="tool-provider">${a}</div>`).join('')
+          : '<div class="tool-provider" style="font-style:italic;color:var(--sand-600)">No actions available</div>';
+
+        details.innerHTML = `
+          <div class="details-top">
+            <h5 class="tool-name">${tool.title}</h5>
+            <img class="detail-logo" src="${tool.logo}" alt="">
+          </div>
+          <div class="detail-tags-row">${cat}${tags}</div>
+          <div class="detail-grid">
+            <div class="field-label">Provider</div><div class="tool-provider">${tool.provider}</div>
+            <div class="field-label">Description</div><div class="long-desc">${tool.longDesc}</div>
+            <div class="field-label">Actions (${tool.actions.length})</div>
+            <div class="actions-list">${acts}</div>
+          </div>`;
+      };
+
+      const render = list => {
+        grid.innerHTML = '';
+        list.forEach(tool => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <div style="padding:.75rem">
+              <div class="card-header">
+                <img class="card-logo" src="${tool.logo}" alt="">
+                <div class="card-title">
+                  <div class="card-name">${tool.title}</div>
+                  <div class="card-desc">${tool.shortDesc}</div>
+                </div>
+              </div>
+            </div>`;
+          card.addEventListener('click', () => {
+            card.classList.contains('active') ? deselect() : select(tool, card);
+          });
+          grid.append(card);
+        });
+      };
+
+      const filter = () => {
+        const q = search.value.toLowerCase();
+        render(TOOLS.filter(t => {
+          const inName = t.name.toLowerCase().includes(q);
+          const inDesc = t.shortDesc.toLowerCase().includes(q);
+          const inProv = t.provider.toLowerCase().includes(q);
+          const inCat = t.categories.some(c => c.toLowerCase().includes(q));
+          const inActs = t.actions.some(a => a.toLowerCase().includes(q));
+          return inName || inDesc || inProv || inCat || inActs;
+        }));
+      };
+
+      /* ---------- open portal modal ---------- */
+      window.portalModal.open({
+        title: 'Add a Tool',
+        content: wrapper,
+        size: 'large',
+        okText: 'Add',
+        cancelText: 'Cancel',
+        okEnabled: true,
+        cancelEnabled: true,
+        okDefault: true,
+        onOk: () => {
+          if (!selectedTool) {
+            alert('Please select a tool first.');
+            return;
+          }
+          alert('Tool Added: ' + selectedTool.title);
+          window.portalModal.close();
+        }
+      });
+
+      okBtn = document.getElementById('portal-modal-ok');
+      enableOk(false);
+      search.addEventListener('input', filter);
+
+      deselect();
+      render(TOOLS);
+    }
+
+    /* ========== BOOTSTRAP ========== */
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('openAddToolBtn')?.addEventListener('click', e => {
+        e.preventDefault();
+        showAddToolModal();
+      });
+    });
+  </script>
+
+</body>
+
+</html>

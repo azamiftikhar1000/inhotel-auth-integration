@@ -146,7 +146,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
       const res = await fetch(url, { cache: 'no-store', signal: controller.signal });
       clearTimeout(timeoutId);
       const json: APIResponse<any[]> = await res.json();
-      
+
       if (json.status_code === 0 && Array.isArray(json.data)) {
         return json.data.map((t: any) => ({
           id: t.id.toString(),
@@ -189,7 +189,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
         // }
       });
       const json: ActionAPIResponse = await res.json();
-      
+
       if (json.status_code === 0 && Array.isArray(json?.data?.args?.rows)) {
         return json.data.args.rows;
       }
@@ -426,17 +426,18 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
           <ModalCloseButton
             className="close-modal"
             aria-label="Close modal"
-            fontSize="1.25rem"
-            w="2rem"
-            h="2rem"
-            color="var(--green-300, #a1d3ba)"
+            fontSize="48px"
+            fontWeight="300"
+            fontFamily="'Open Sans', sans-serif"
+            w="32px"
+            h="32px"
+            color="rgb(161, 211, 186)"
             top="12px"
             right="12px"
             display="flex"
             alignItems="center"
-            font="inherit"
             justifyContent="center"
-            bg="none"
+            bg="transparent"
             border="none"
             outline="none"
             boxShadow="none"
@@ -454,26 +455,27 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                   as="h4"
                   id="portal-modal-title"
                   className="portal-h4"
-                  color="var(--neutral--900)"
-                  mt="-6rem"
-                  mb="1rem"
-                  pt="6.5rem"
+                  color="rgb(15, 15, 15)"
+                  m="8px 0"
                   fontFamily="Montserrat, sans-serif"
-                  fontSize="1.5rem"
-                  lineHeight="1.222em"
+                  fontSize="20.8px"
+                  lineHeight="25.4176px"
                   fontWeight="400"
+                  display="block"
+                  boxSizing="border-box"
                 >
-                  Connect a Tool
+                  Add a Tool
                 </Heading>
                 <Text
                   as="p"
                   className="modal-subtitle"
-                  color="var(--neutral--900)"
-                  m="0 0 1rem 0"
-                  fontFamily="Open Sans,sans-serif"
-                  lineHeight="1.4em"
-                  fontSize="1.125rem"
+                  color="rgb(15, 15, 15)"
+                  m="0 0 16px 0"
+                  fontFamily="'Open Sans', sans-serif"
+                  lineHeight="1.5"
+                  fontSize="18px"
                   fontWeight="300"
+                  boxSizing="border-box"
                 >
                   Select systems and tools you wish to make available for the AI assistants in your organization.
                 </Text>
@@ -499,9 +501,9 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                   borderRadius="9999px"
                   bg="#ffffff"
                   _placeholder={{ color: 'var(--sand-400, #d3a873)' }}
-                  _focus={{ 
-                    outline: 'none', 
-                    border: '1px solid', 
+                  _focus={{
+                    outline: 'none',
+                    border: '1px solid',
                     borderColor: 'var(--green-300, #a1d3ba)',
                     boxShadow: 'none'
                   }}
@@ -527,121 +529,146 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                   <Spinner thickness="3px" speed="0.6s" emptyColor="gray.200" color="#a1d3ba" size="lg" />
                 </Box>
               ) : (
-              <HStack spacing="0" flex="1" minH="0" align="stretch">
-                {/* Tools Grid - Fixed Width */}
-                <Box 
-                  w="50%" 
-                  minW="50%" 
-                  maxW="50%" 
-                  overflow="hidden"
-                  flexShrink={0}
-                >
+                <HStack spacing="0" flex="1" minH="0" align="stretch">
+                  {/* Tools Grid - Fixed Width */}
                   <Box
-                    id="catalog-card-grid"
-                    className="card-grid"
-                    display="grid"
-                    rowGap=".5rem"
-                    alignContent="start"
-                    pr=".5rem"
-                    h="100%"
-                    overflowY="auto"
-                    css={{
-                      '&::-webkit-scrollbar': {
-                        width: '6px',
-                      },
-                      '&::-webkit-scrollbar-track': {
-                        background: 'transparent',
-                      },
-                      '&::-webkit-scrollbar-thumb': {
-                        background: '#d1d5db',
-                        borderRadius: '3px',
-                      },
-                    }}
+                    w="50%"
+                    minW="50%"
+                    maxW="50%"
+                    overflow="hidden"
+                    flexShrink={0}
                   >
-                        {filteredTools.map((tool) => (
-                          <Box
-                            className="card"
-                            key={tool.id}
-                            bg="var(--sand--040, #fdfaf7)"
-                            color="var(--neutral--900, #0f0f0f)"
-                            border="1px solid"
-                            borderColor="var(--sand--100, #e9d4b9)"
-                            borderRadius="0.25rem"
-                            cursor="pointer"
-                            p="0.75rem"
-                            h={{ base: '5.5rem', md: '6.5rem' }}
-                            overflow="hidden"
-                            transform="scale(1.00)"
-                            transition="transform 0.2s ease, box-shadow 0.2s, border 0.2s, background 0.2s"
-                            _hover={{
-                              bg: selectedTool?.id === tool.id ? 'var(--sand--020, #fefdfb)' : 'var(--sand--040, #fdfaf7)',
-                              transform: 'scale(1.00)',
-                              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                              borderColor: 'var(--green-300, #a1d3ba)',
-                            }}
-                            onClick={() => handleToolSelect(tool)}
-                          >
-                            <HStack className="card-header" spacing="0.75rem" mb="0">
-                              <Image
-                                className="card-logo"
-                                src={tool.logo}
-                                w="64px"
-                                h="64px"
-                                objectFit="contain"
-                                alt={tool.title}
-                              />
-                              <VStack className="card-title" align="start" flex="1" gap="0">
-                                <Text className="card-name" fontSize="1rem" fontFamily="Open Sans,sans-serif" fontWeight="500" color="var(--neutral--900, #0f0f0f)" m="4px 0">
-                                  {tool.title}
-                                </Text>
-                                <Text 
-                                  className="card-desc"
-                                  fontSize="0.9rem" 
-                                  fontFamily="Open Sans,sans-serif"
-                                  fontWeight="300"
-                                  color="var(--neutral--800, #292929)" 
-                                  mt="0" 
-                                  lineHeight="1.1"
-                                  overflow="hidden"
-                                  textOverflow="ellipsis"
-                                  display="-webkit-box"
-                                  css={{
-                                    WebkitLineClamp: 3,
-                                    WebkitBoxOrient: 'vertical',
-                                    wordBreak: 'normal',
-                                  }}
-                                >
-                                  {tool.shortDesc}
-                                </Text>
-                              </VStack>
-                            </HStack>
-                          </Box>
-                        ))
-                    }
+                    <Box
+                      id="catalog-card-grid"
+                      className="card-grid"
+                      display="grid"
+                      rowGap=".5rem"
+                      alignContent="start"
+                      pr=".5rem"
+                      h="100%"
+                      overflowY="auto"
+                      css={{
+                        '&::-webkit-scrollbar': {
+                          width: '6px',
+                        },
+                        '&::-webkit-scrollbar-track': {
+                          background: 'transparent',
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                          background: '#d1d5db',
+                          borderRadius: '3px',
+                        },
+                      }}
+                    >
+                      {filteredTools.map((tool) => (
+                        <Box
+                          className={`card ${selectedTool?.id === tool.id ? 'active' : ''}`}
+                          key={tool.id}
+                          bg={selectedTool?.id === tool.id ? 'rgb(255, 255, 255)' : 'rgb(253, 250, 247)'}
+                          color="rgb(2, 2, 2)"
+                          border="1px solid"
+                          borderColor={selectedTool?.id === tool.id ? 'rgb(244, 233, 220)' : 'rgb(244, 233, 220)'}
+                          borderRadius="4px"
+                          cursor="pointer"
+                          p="0.75rem"
+                          minH="88px"
+                          maxH="140px"
+                          overflow="hidden"
+                          boxShadow="rgba(20, 20, 43, 0.06) 0px 2px 7px 0px"
+                          transition="0.2s"
+                          _hover={{
+                            bg: selectedTool?.id === tool.id ? 'rgb(255, 255, 255)' : 'rgb(254, 253, 251)',
+                            boxShadow: 'rgba(0, 0, 0, 0.1) 0px 2px 8px 0px',
+                            borderColor: 'rgb(161, 211, 186)',
+                          }}
+                          onClick={() => handleToolSelect(tool)}
+                        >
+                          <HStack className="card-header" spacing="0.75rem" mb="0">
+                            <Image
+                              className="card-logo"
+                              src={tool.logo}
+                              w="64px"
+                              h="64px"
+                              objectFit="contain"
+                              alt={tool.title}
+                            />
+                            <VStack
+                              className="card-title"
+                              align="start"
+                              flex="1"
+                              gap="0"
+                              fontFamily="'Open Sans', sans-serif"
+                              fontSize="16px"
+                              fontWeight="300"
+                              color="rgb(2, 2, 2)"
+                              lineHeight="24px"
+                              h="64px"
+                              cursor="pointer"
+                              boxSizing="border-box"
+                            >
+                              <Text
+                                className="card-name"
+                                fontSize="16px"
+                                fontFamily="'Open Sans', sans-serif"
+                                fontWeight="400"
+                                color="rgb(2, 2, 2)"
+                                display="block"
+                                lineHeight="24px"
+                                m="0 0 2px 0"
+                                pr="21px"
+                                cursor="pointer"
+                                boxSizing="border-box"
+                              >
+                                {tool.title}
+                              </Text>
+                              <Text
+                                className="card-desc"
+                                fontSize="14.4px"
+                                fontFamily="'Open Sans', sans-serif"
+                                fontWeight="300"
+                                color="rgb(41, 41, 41)"
+                                lineHeight="15.84px"
+                                overflow="hidden"
+                                textOverflow="ellipsis"
+                                display="-webkit-box"
+                                cursor="pointer"
+                                boxSizing="border-box"
+                                css={{
+                                  WebkitLineClamp: 2,
+                                  WebkitBoxOrient: 'vertical',
+                                }}
+                              >
+                                {tool.shortDesc}
+                              </Text>
+                            </VStack>
+                          </HStack>
+                        </Box>
+                      ))
+                      }
+                    </Box>
                   </Box>
-                </Box>
 
-                {/* Details Panel - Fixed Width */}
-                <Box
-                  w="50%"
-                  minW="50%"
-                  maxW="50%"
-                  flexShrink={0}
-                >
+                  {/* Details Panel - Fixed Width */}
                   <Box
-                    id="catalog-details-panel"
-                    className="details-panel"
-                    bg="#ffffff"
-                    border="1px solid"
-                    borderColor={colorMode === 'light' ? '#e7e5e4' : '#374151'}
-                    borderRadius="0.25rem"
-                    p="16px"
-                    overflowY="auto"
-                    display="flex"
-                    flexDirection="column"
-                    h="100%"
+                    w="50%"
+                    minW="50%"
+                    maxW="50%"
+                    flexShrink={0}
                   >
-                    {!selectedTool ? (
+                    <Box
+                      id="catalog-details-panel"
+                      className="details-panel"
+                      bg="#ffffff"
+                      border="1px solid"
+                      borderColor={colorMode === 'light' ? '#e7e5e4' : '#374151'}
+                      borderRadius="0.25rem"
+                      p="16px"
+                      overflowY="auto"
+                      display="flex"
+                      flexDirection="column"
+                      h="100%"
+                    >
+                      {!selectedTool ? (
                         <Image
                           className="empty-state"
                           src="https://cdn.prod.website-files.com/657ae60d92ed823479730a3f/67f93be4b1e4cf832343dce6_inhotel-pineapple-sand-060.svg"
@@ -658,112 +685,119 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                           overflow="clip"
                           overflow-clip-margin="content-box"
                         />
-                    ) : (
-                      <VStack spacing="1rem" align="stretch" h="100%">
-                        {/* Header: name left, logo right */}
-                        <HStack className="details-top" justify="space-between" align="flex-start">
-                          <Heading className="tool-name" as="h5" fontFamily="Open Sans,sans-serif" fontSize="1.375rem" m="0.25rem 0" fontWeight="300" color="var(--neutral--900)" lineHeight="1.222em">
-                            {selectedTool.title}
-                          </Heading>
-                          <Image
-                            className="detail-logo"
-                            src={selectedTool.logo}
-                            w="64px"
-                            h="64px"
-                            objectFit="contain"
-                            alt={selectedTool.title}
-                          />
-                        </HStack>
+                      ) : (
+                        <VStack spacing="1rem" align="stretch" h="100%">
+                          {/* Header: name left, logo right */}
+                          <HStack className="details-top" justify="space-between" align="flex-start">
+                            <Heading className="tool-name" as="h5" fontFamily="Open Sans,sans-serif" fontSize="1.375rem" m="0.25rem 0" fontWeight="300" color="var(--neutral--900)" lineHeight="1.222em">
+                              {selectedTool.title}
+                            </Heading>
+                            <Image
+                              className="detail-logo"
+                              src={selectedTool.logo}
+                              w="64px"
+                              h="64px"
+                              objectFit="contain"
+                              alt={selectedTool.title}
+                            />
+                          </HStack>
 
-                        {/* Tags row */}
-                        <HStack className="detail-tags-row" spacing="0.5rem" flexWrap="wrap" mt="0.25rem">
-                          {selectedTool.categories && selectedTool.categories.length > 0 && (
-                            <>
-                              <Box
-                                className="tag-category"
-                                as="span"
-                                fontSize="0.75rem"
-                                fontFamily="Open Sans,sans-serif"
-                                fontWeight="300"
-                                color="var(--neutral--900)"
-                                bg="var(--blue-050, #edf0f7)"
-                                borderRadius="1rem"
-                                px="10px"
-                                py="2px"
-                              >
-                                {selectedTool.categories[0]}
-                              </Box>
-                              {selectedTool.categories.slice(1).map((tag, idx) => (
+                          {/* Tags row */}
+                          <HStack className="detail-tags-row" spacing="0.5rem" flexWrap="wrap" mt="0.25rem">
+                            {selectedTool.categories && selectedTool.categories.length > 0 && (
+                              <>
                                 <Box
-                                  className="tag-item"
-                                  key={`${tag}-${idx}`}
+                                  className="tag-category"
                                   as="span"
                                   fontSize="0.75rem"
                                   fontFamily="Open Sans,sans-serif"
                                   fontWeight="300"
                                   color="var(--neutral--900)"
-                                  bg="var(--green-050, #f0f8f4)"
+                                  bg="var(--blue-050, #edf0f7)"
                                   borderRadius="1rem"
                                   px="10px"
                                   py="2px"
                                 >
-                                  {tag}
+                                  {selectedTool.categories[0]}
                                 </Box>
-                              ))}
-                            </>
-                          )}
-                        </HStack>
+                                {selectedTool.categories.slice(1).map((tag, idx) => (
+                                  <Box
+                                    className="tag-item"
+                                    key={`${tag}-${idx}`}
+                                    as="span"
+                                    fontSize="0.75rem"
+                                    fontFamily="Open Sans,sans-serif"
+                                    fontWeight="300"
+                                    color="var(--neutral--900)"
+                                    bg="var(--green-050, #f0f8f4)"
+                                    borderRadius="1rem"
+                                    px="10px"
+                                    py="2px"
+                                  >
+                                    {tag}
+                                  </Box>
+                                ))}
+                              </>
+                            )}
+                          </HStack>
 
-                        {/* Details grid */}
-                        <Grid className="detail-grid" templateColumns="max-content 1fr" rowGap="0.5rem" columnGap="1rem" mt="1rem">
-                          <Text className="field-label"
-                            fontFamily="Open Sans,sans-serif"
-                            fontWeight="300"
-                            color="var(--sand--400, #d3a873)"
-                          >
-                            Provider
-                          </Text>
-                          <Text className="tool-provider" m="0" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--neutral--900)">
-                            {selectedTool.provider}
-                          </Text>
+                          {/* Details grid */}
+                          <Grid className="detail-grid" templateColumns="max-content 1fr" rowGap="0.5rem" columnGap="1rem" mt="1rem">
+                            <Text className="field-label"
+                              fontFamily="Open Sans,sans-serif"
+                              fontWeight="300"
+                              color="var(--sand--400, #d3a873)"
+                            >
+                              Provider
+                            </Text>
+                            <Text className="tool-provider" m="0" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--neutral--900)">
+                              {selectedTool.provider}
+                            </Text>
 
-                          <Text className="field-label" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--sand--400, #d3a873)">
-                            Description
-                          </Text>
-                          <Box className="long-desc" dangerouslySetInnerHTML={{ __html: selectedTool.longDesc }} fontSize="1.15rem" lineHeight="1.4em" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--neutral--900)" mb="1rem" />
+                            <Text className="field-label" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--sand--400, #d3a873)">
+                              Description
+                            </Text>
+                            <Box className="long-desc" dangerouslySetInnerHTML={{ __html: selectedTool.longDesc }} fontSize="1.15rem" lineHeight="1.4em" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--neutral--900)" mb="1rem" />
 
-                          <Text className="field-label" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--sand--400, #d3a873)">
-                            Actions ({selectedToolActions.length})
-                          </Text>
-                          <Box className="actions-list" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--neutral--900)">
-                            {renderActionsList()}
-                          </Box>
-                        </Grid>
-                      </VStack>
-                    )}
+                            <Text className="field-label" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--sand--400, #d3a873)">
+                              Actions ({selectedToolActions.length})
+                            </Text>
+                            <Box className="actions-list" fontFamily="Open Sans,sans-serif" fontWeight="300" color="var(--neutral--900)">
+                              {renderActionsList()}
+                            </Box>
+                          </Grid>
+                        </VStack>
+                      )}
+                    </Box>
                   </Box>
-                </Box>
-              </HStack>
+                </HStack>
               )}
             </VStack>
           </ModalBody>
           <ModalFooter p="0" mt="1rem" display="flex" gap="0.5rem">
             <Button
               className="button sand-green slim"
-              px="20px"
-              fontFamily="Montserrat,sans-serif"
-              fontSize="1.125rem"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              px="24px"
+              py="8px"
+              fontFamily="Montserrat, sans-serif"
+              fontSize="18px"
               fontWeight="300"
-              py=".5rem"
-              borderRadius="9999px"
-              bg="var(--sand--100, #f4e9dc)"
-              border="1px solid"
-              borderColor="var(--sand--200, #e9d4b9)"
-              color="var(--neutral--900, #0f0f0f)"
-              fontStyle="normal"
+              lineHeight="19.998px"
+              h="38px"
+              borderRadius="20px"
+              bg="rgb(244, 233, 220)"
+              border="1px solid rgb(233, 212, 185)"
+              color="rgb(15, 15, 15)"
+              boxShadow="rgba(20, 20, 43, 0.06) 0px 4px 10px 0px"
+              boxSizing="border-box"
+              cursor="pointer"
+              transition="all 0.2s"
               _hover={{
-                bg: 'var(--green-300, #a1d3ba)',
-                borderColor: 'var(--green-300, #a1d3ba)',
+                bg: 'rgb(161, 211, 186)',
+                borderColor: 'rgb(161, 211, 186)',
                 transform: 'translateY(-3px)',
               }}
               onClick={onClose}
@@ -772,22 +806,29 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
             </Button>
             <Button
               className="button white-green slim"
-              px="20px"
-              fontFamily="Montserrat,sans-serif"
-              fontSize="1.125rem"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              px="24px"
+              py="8px"
+              fontFamily="Montserrat, sans-serif"
+              fontSize="18px"
               fontWeight="300"
-              py=".5rem"
-              borderRadius="9999px"
-              bg="var(--neutral--000, #ffffff)"
-              border="1px solid"
+              lineHeight="19.998px"
+              h="38px"
+              borderRadius="20px"
+              bg="rgb(255, 255, 255)"
+              border="1px solid rgb(191, 191, 191)"
+              color={selectedTool && isToolConnectable(selectedTool) ? 'rgb(15, 15, 15)' : '#9ca3af'}
+              boxShadow="rgba(20, 20, 43, 0.06) 0px 4px 10px 0px"
+              boxSizing="border-box"
+              cursor={selectedTool && isToolConnectable(selectedTool) ? 'pointer' : 'not-allowed'}
+              transition="all 0.2s"
               _hover={selectedTool && isToolConnectable(selectedTool) ? {
-                bg: 'var(--green-300, #a1d3ba)',
-                borderColor: 'var(--green-300, #a1d3ba)',
+                bg: 'rgb(161, 211, 186)',
+                color: 'rgb(15, 15, 15)',
                 transform: 'translateY(-3px)',
               } : {}}
-              borderColor={selectedTool && isToolConnectable(selectedTool) ? 'var(--neutral--200, #bfbfbf)' : '#e5e7eb'}
-              color={selectedTool && isToolConnectable(selectedTool) ? 'var(--neutral--900, #0f0f0f)' : '#9ca3af'}
-              fontStyle="normal"
               pointerEvents="auto"
               onClick={() => {
                 if (selectedTool && isToolConnectable(selectedTool)) {
@@ -796,7 +837,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
               }}
               isDisabled={!selectedTool || !isToolConnectable(selectedTool || ({} as any))}
             >
-              Connect
+              Add
             </Button>
           </ModalFooter>
         </ModalContent>
