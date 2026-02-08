@@ -155,8 +155,8 @@ export const ConnectionFormSection = ({
         >
           <Image
             src={definition?.frontend?.spec?.image}
-            w="200px"
-            h="200px"
+            maxW="60%"
+            h="auto"
             objectFit="contain"
           />
           <Heading

@@ -43,6 +43,7 @@ export const FormPassword = ({
           placeholder={placeholder}
           {...register(name, rules)}
           borderRadius="1.25rem"
+          pr="3.5rem"
           bg="#ffffff"
           border="1px solid"
           borderColor="var(--sand-200, #e9d4b9)"
@@ -54,12 +55,13 @@ export const FormPassword = ({
             boxShadow: "none",
           }}
         />
-        <InputRightElement width="4.5rem" height="100%" alignItems="center" justifyContent="center">
+        <InputRightElement width="3rem" height="100%" alignItems="center" justifyContent="center" right="0.5rem">
           <IconButton
             aria-label={show ? "Hide password" : "Show password"}
             variant="ghost"
             size="sm"
             fontSize="xl"
+            borderRadius="full"
             icon={show ? <ViewOffIcon /> : <ViewIcon />}
             onClick={() => setShow(!show)}
             _hover={{
