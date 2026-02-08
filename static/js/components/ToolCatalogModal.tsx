@@ -659,7 +659,7 @@ export const ToolCatalogModal: React.FC<ToolCatalogModalProps> = ({
                     <Box
                       id="catalog-details-panel"
                       className="details-panel"
-                      bg="var(--sand-040, #fdfaf7)"
+                      bg={selectedTool ? '#fff' : 'var(--sand-040, #fdfaf7)'}
                       border="1px solid"
                       borderColor="var(--sand-100, #f4e9dc)"
                       borderRadius="0.25rem"
