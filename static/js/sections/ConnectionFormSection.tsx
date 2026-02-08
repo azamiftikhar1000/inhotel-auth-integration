@@ -184,7 +184,14 @@ export const ConnectionFormSection = ({
                       {form?.type === "static_text" && (
                         <Box w="100%">
                           {form.label && (
-                            <Text fontSize="lg" fontWeight="bold" mb="1">
+                            <Text
+                              fontSize="14.4px"
+                              fontWeight="300"
+                              fontFamily="'Open Sans', sans-serif"
+                              color="var(--neutral--900, #0f0f0f)"
+                              mb="1"
+                              pl="1"
+                            >
                               {form.label}
                             </Text>
                           )}
