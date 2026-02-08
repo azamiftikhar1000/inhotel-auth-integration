@@ -153,7 +153,12 @@ export const ConnectionFormSection = ({
           }}
           overflowY="auto"
         >
-          <Image src={definition?.frontend?.spec?.image} />
+          <Image
+            src={definition?.frontend?.spec?.image}
+            w="200px"
+            h="200px"
+            objectFit="contain"
+          />
           <Heading
             textAlign="center"
             as="h1"
@@ -165,14 +170,6 @@ export const ConnectionFormSection = ({
           >
             {definition?.frontend?.spec?.title}
           </Heading>
-          <Text
-            textAlign="center"
-            fontFamily="Open Sans, sans-serif"
-            fontWeight="300"
-            color="var(--neutral--600, #5c5c5c)"
-          >
-            {definition?.frontend?.spec?.category}
-          </Text>
           <form style={{ width: "100%" }} onSubmit={handleSubmit(onSubmit)}>
             <VStack spacing="5">
               <VStack w="100%" spacing="0">

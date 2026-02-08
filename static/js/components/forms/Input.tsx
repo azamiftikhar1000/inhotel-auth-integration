@@ -43,7 +43,7 @@ export const FormInput = ({
         placeholder={placeholder}
         {...register(name, rules)}
         disabled={disabled}
-        fontSize="1.25rem"
+        borderRadius="1.25rem"
         bg="#ffffff"
         border="1px solid"
         borderColor="var(--sand-200, #e9d4b9)"
